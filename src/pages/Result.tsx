@@ -1,0 +1,65 @@
+import { useLocation, Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Trophy } from 'lucide-react';
+import { Team } from '@/lib/teams';
+
+interface Score extends Team {
+  score: number;
+}
+
+const Result = () => {
+  const location = useLocation();
+  const scores: Score[] = location.state?.scores || [];
+
+  if (scores.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
+        <h1 className="text-2xl mb-4">No game data found.</h1>
+        <Link to="/">
+          <Button>Go to Home</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const sortedScores = [...scores].sort((a, b) => b.score - a.score);
+  const maxScore = sortedScores.length > 0 ? sortedScores[0].score : 0;
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-center text-3xl font-bold">Game Over!</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {sortedScores.map((team, index) => {
+              const isWinner = team.score === maxScore && maxScore > 0;
+              return (
+                <div
+                  key={index}
+                  className={`p-4 rounded-lg flex justify-between items-center transition-all ${isWinner ? 'bg-yellow-100 dark:bg-yellow-900 border-2 border-yellow-400 shadow-lg' : 'bg-gray-50 dark:bg-gray-800'}`}
+                >
+                  <div className="flex items-center">
+                    <span className={`w-4 h-4 rounded-full mr-3 ${team.bgColor}`}></span>
+                    <span className="font-semibold text-lg">{team.name}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="font-bold text-xl mr-3">{team.score}</span>
+                    {isWinner && <Trophy className="h-6 w-6 text-yellow-500" />}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+      <Link to="/" className="mt-8">
+        <Button size="lg">Play Again</Button>
+      </Link>
+    </div>
+  );
+};
+
+export default Result;

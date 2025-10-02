@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import HexagonalBoard, { HexagonState } from "@/components/HexagonalBoard";
 import TileSidebar from "@/components/TileSidebar";
 import TurnIndicator from "@/components/TurnIndicator";
@@ -27,26 +28,21 @@ const shuffleArray = (array: any[]) => {
 const getNeighbors = (row: number, col: number): [number, number][] => {
   if (row % 2 === 1) { // Odd rows
     return [
-      [row, col - 1],
-      [row, col + 1],
-      [row - 1, col],
-      [row - 1, col + 1],
-      [row + 1, col],
-      [row + 1, col + 1],
+      [row, col - 1], [row, col + 1],
+      [row - 1, col], [row - 1, col + 1],
+      [row + 1, col], [row + 1, col + 1],
     ];
   } else { // Even rows
     return [
-      [row, col - 1],
-      [row, col + 1],
-      [row - 1, col - 1],
-      [row - 1, col],
-      [row + 1, col - 1],
-      [row + 1, col],
+      [row, col - 1], [row, col + 1],
+      [row - 1, col - 1], [row - 1, col],
+      [row + 1, col - 1], [row + 1, col],
     ];
   }
 };
 
 const Play = () => {
+  const navigate = useNavigate();
   const { tiles: configuredTiles } = useGame();
   const [round, setRound] = useState(1);
   const [turn, setTurn] = useState(0);
@@ -54,12 +50,15 @@ const Play = () => {
   const [scores, setScores] = useState(TEAMS.map(team => ({ ...team, score: 0 })));
   const [deck, setDeck] = useState<Tile[]>([]);
   const [hand, setHand] = useState<(Tile | null)[]>(Array(4).fill(null));
+  const [totalGameTiles, setTotalGameTiles] = useState(0);
+  const [placedTilesCount, setPlacedTilesCount] = useState(0);
   
   const isInitialMount = useRef(true);
 
   useEffect(() => {
     const startingTiles = configuredTiles.filter(tile => tile.isStartingTile && tile.word.trim() !== '');
     const gameTiles = configuredTiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
+    setTotalGameTiles(gameTiles.length);
 
     const startingPositions = ['1-1', '1-4', '4-1', '4-4'];
     const shuffledStartingTiles = shuffleArray(startingTiles);
@@ -67,10 +66,7 @@ const Play = () => {
 
     startingPositions.forEach((pos, index) => {
       if (shuffledStartingTiles[index]) {
-        initialBoardState[pos] = {
-          color: 'text-gray-500',
-          tile: shuffledStartingTiles[index],
-        };
+        initialBoardState[pos] = { color: 'text-gray-500', tile: shuffledStartingTiles[index] };
       }
     });
     setBoardState(initialBoardState);
@@ -79,7 +75,6 @@ const Play = () => {
       const shuffledDeck = shuffleArray(gameTiles);
       const initialHand = shuffledDeck.slice(0, 4);
       const remainingDeck = shuffledDeck.slice(4);
-      
       setHand(initialHand.concat(Array(4 - initialHand.length).fill(null)));
       setDeck(remainingDeck);
     }
@@ -118,15 +113,12 @@ const Play = () => {
     if (placedTileTags.length === 0) return 0;
 
     const neighbors = getNeighbors(row, col);
-
     for (const [nRow, nCol] of neighbors) {
         const neighborKey = `${nRow}-${nCol}`;
         const neighborHex = currentBoardState[neighborKey];
-
-        if (neighborHex && neighborHex.tile) {
+        if (neighborHex?.tile) {
             const neighborTags = [neighborHex.tile.tag1, neighborHex.tile.tag2, neighborHex.tile.tag3].filter(tag => tag && tag.trim() !== '');
-            const hasCommonTag = placedTileTags.some(tag => neighborTags.includes(tag));
-            if (hasCommonTag) {
+            if (placedTileTags.some(tag => neighborTags.includes(tag))) {
                 score += 2;
             }
         }
@@ -136,32 +128,29 @@ const Play = () => {
 
   const handleDrop = (row: number, col: number, item: DraggableItem) => {
     const key = `${row}-${col}`;
-    
     const points = calculateScore(row, col, item.tile, boardState);
 
-    setBoardState(prev => ({
-      ...prev,
-      [key]: {
-        color: currentPlayer.textColor,
-        tile: item.tile,
-      },
-    }));
-
+    setBoardState(prev => ({ ...prev, [key]: { color: currentPlayer.textColor, tile: item.tile } }));
     setHand(prevHand => {
       const newHand = [...prevHand];
       newHand[item.handIndex] = null;
       return newHand;
     });
 
+    let finalScores = scores;
     if (points > 0) {
-      const teamIndex = currentPlayerIndex;
-      if (teamIndex !== -1) {
-        setScores(prevScores => {
-          const newScores = [...prevScores];
-          newScores[teamIndex].score += points;
-          return newScores;
-        });
-      }
+      finalScores = scores.map((teamScore, index) => 
+        index === currentPlayerIndex ? { ...teamScore, score: teamScore.score + points } : teamScore
+      );
+      setScores(finalScores);
+    }
+
+    const newPlacedCount = placedTilesCount + 1;
+    setPlacedTilesCount(newPlacedCount);
+
+    if (totalGameTiles > 0 && newPlacedCount >= totalGameTiles) {
+      navigate('/result', { state: { scores: finalScores } });
+      return;
     }
 
     const nextTurn = turn + 1;
@@ -178,25 +167,12 @@ const Play = () => {
       <CustomDragLayer />
       <div className="min-h-screen w-full flex flex-col bg-white dark:bg-gray-950">
         <div className="p-4 border-b dark:border-gray-800">
-          <TurnIndicator 
-            round={round}
-            currentPlayerName={currentPlayer.name}
-            scores={scores}
-          />
+          <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
         </div>
         <div className="flex flex-1 overflow-hidden">
-          <TileSidebar 
-            currentPlayerColor={currentPlayer.textColor}
-            hand={hand}
-          />
+          <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
-            <HexagonalBoard 
-              rows={6} 
-              cols={6} 
-              hexagonSize={50}
-              boardState={boardState}
-              onDrop={handleDrop}
-            />
+            <HexagonalBoard rows={6} cols={6} hexagonSize={50} boardState={boardState} onDrop={handleDrop} />
           </main>
         </div>
       </div>

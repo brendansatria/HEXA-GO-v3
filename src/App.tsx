@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Start from "./pages/Start";
 import Setup from "./pages/Setup";
 import Play from "./pages/Play";
+import Result from "./pages/Result";
 import NotFound from "./pages/NotFound";
 import { GameProvider } from "./context/GameContext";
 
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Start />} />
             <Route path="/setup" element={<Setup />} />
             <Route path="/play" element={<Play />} />
+            <Route path="/result" element={<Result />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
