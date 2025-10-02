@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Trash2 } from 'lucide-react';
 import { useGame } from '@/context/GameContext';
 
 interface TileRow {
@@ -27,14 +27,22 @@ const Setup = () => {
   const [rows, setRows] = useState<TileRow[]>([
     { id: 1, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
   ]);
+  const [nextId, setNextId] = useState(2);
   const { setTiles } = useGame();
   const navigate = useNavigate();
 
   const handleAddRow = () => {
     setRows([
       ...rows,
-      { id: rows.length + 1, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
+      { id: nextId, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
     ]);
+    setNextId(nextId + 1);
+  };
+
+  const handleDeleteRow = (id: number) => {
+    if (rows.length > 1) {
+      setRows(rows.filter((row) => row.id !== id));
+    }
   };
 
   const handleInputChange = (id: number, field: keyof TileRow, value: string | boolean) => {
@@ -68,6 +76,7 @@ const Setup = () => {
                 <TableHead>Tag 1</TableHead>
                 <TableHead>Tag 2</TableHead>
                 <TableHead>Tag 3</TableHead>
+                <TableHead className="w-[80px] text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -109,6 +118,16 @@ const Setup = () => {
                       onChange={(e) => handleInputChange(row.id, 'tag3', e.target.value)}
                       placeholder="Enter tag..."
                     />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteRow(row.id)}
+                      disabled={rows.length <= 1}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
