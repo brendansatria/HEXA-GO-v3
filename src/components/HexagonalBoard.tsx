@@ -1,5 +1,5 @@
-import React from 'react';
-import Hexagon from './Hexagon';
+import React, { useState } from 'react';
+import BoardHexagon from './BoardHexagon';
 
 interface HexagonalBoardProps {
   rows: number;
@@ -8,6 +8,15 @@ interface HexagonalBoardProps {
 }
 
 const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize }) => {
+  const [boardState, setBoardState] = useState<{ [key: string]: string }>({});
+
+  const handleDrop = (row: number, col: number, item: { color: string }) => {
+    setBoardState(prev => ({
+      ...prev,
+      [`${row}-${col}`]: item.color,
+    }));
+  };
+
   const sideLength = hexagonSize;
   const hexWidth = Math.sqrt(3) * sideLength;
   const hexHeight = 2 * sideLength;
@@ -17,16 +26,18 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
     for (let col = 0; col < cols; col++) {
       const xOffset = col * hexWidth + (row % 2 === 1 ? hexWidth / 2 : 0);
       const yOffset = row * (hexHeight * 0.75);
+      const key = `${row}-${col}`;
 
       hexagons.push(
         <div
-          key={`${row}-${col}`}
+          key={key}
           className="absolute transition-transform duration-200 ease-in-out hover:scale-110"
           style={{ left: `${xOffset}px`, top: `${yOffset}px` }}
         >
-          <Hexagon 
-            sideLength={sideLength} 
-            className="text-gray-300 dark:text-gray-700 hover:text-blue-500 dark:hover:text-blue-400 transition-colors" 
+          <BoardHexagon
+            sideLength={sideLength}
+            color={boardState[key]}
+            onDrop={(item) => handleDrop(row, col, item)}
           />
         </div>
       );
