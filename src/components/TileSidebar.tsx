@@ -15,10 +15,10 @@ const TileSidebar: React.FC<TileSidebarProps> = ({ currentPlayerColor, hand, fee
         <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4 text-center">Your Tiles</h2>
         <div className="grid grid-cols-2 gap-4 place-items-center">
           {hand.map((tile, index) => (
-            <div key={index} className="w-[100px] h-[100px] flex items-center justify-center">
+            <div key={index} className="w-[120px] h-[120px] flex items-center justify-center">
               {tile ? (
                 <DraggableHexagon
-                  sideLength={40}
+                  sideLength={50}
                   color={currentPlayerColor}
                   tile={tile}
                   handIndex={index}

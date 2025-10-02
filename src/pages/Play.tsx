@@ -199,7 +199,7 @@ const Play = () => {
         <div className="flex flex-1 overflow-hidden">
           <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} feedback={lastMoveFeedback} />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
-            <HexagonalBoard rows={6} cols={6} hexagonSize={50} boardState={boardState} onDrop={handleDrop} />
+            <HexagonalBoard rows={6} cols={6} hexagonSize={60} boardState={boardState} onDrop={handleDrop} />
           </main>
         </div>
       </div>
