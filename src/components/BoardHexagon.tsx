@@ -12,20 +12,19 @@ interface BoardHexagonProps {
   sideLength: number;
   color: string;
   onDrop: (item: DraggableItem) => void;
-  currentPlayerColor: string;
   isOccupied: boolean;
 }
 
-const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop, currentPlayerColor, isOccupied }) => {
+const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop, isOccupied }) => {
   const [{ isOver, canDropNow }, drop] = useDrop(() => ({
     accept: ItemTypes.HEXAGON,
     drop: (item: DraggableItem) => onDrop(item),
-    canDrop: (item: DraggableItem) => item.color === currentPlayerColor && !isOccupied,
+    canDrop: () => !isOccupied,
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDropNow: !!monitor.canDrop(),
     }),
-  }), [currentPlayerColor, isOccupied]);
+  }), [isOccupied]);
 
   const baseColor = "text-gray-300 dark:text-gray-700";
   const hoverColor = "hover:text-blue-500 dark:hover:text-blue-400";

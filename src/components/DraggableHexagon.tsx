@@ -8,18 +8,16 @@ import { cn } from '@/lib/utils';
 interface DraggableHexagonProps {
   sideLength: number;
   color: string;
-  disabled?: boolean;
 }
 
-const DraggableHexagon: React.FC<DraggableHexagonProps> = ({ sideLength, color, disabled = false }) => {
+const DraggableHexagon: React.FC<DraggableHexagonProps> = ({ sideLength, color }) => {
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.HEXAGON,
     item: { color, sideLength },
-    canDrag: !disabled,
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
-  }), [disabled]);
+  }), []);
 
   React.useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
@@ -29,10 +27,7 @@ const DraggableHexagon: React.FC<DraggableHexagonProps> = ({ sideLength, color, 
     <div
       ref={drag}
       style={{ opacity: isDragging ? 0 : 1 }}
-      className={cn(
-        "cursor-grab",
-        { "opacity-40 cursor-not-allowed grayscale": disabled }
-      )}
+      className={cn("cursor-grab")}
     >
       <Hexagon sideLength={sideLength} className={color} />
     </div>

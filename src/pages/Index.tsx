@@ -24,15 +24,15 @@ const Index = () => {
   const currentPlayerIndex = (startingPlayerIndex + turn) % TEAMS.length;
   const currentPlayer = TEAMS[currentPlayerIndex];
 
-  const handleDrop = (row: number, col: number, item: DraggableItem) => {
-    // Update board state
+  const handleDrop = (row: number, col: number, _item: DraggableItem) => {
+    // Update board state with the CURRENT PLAYER's color, ignoring the dragged item's color
     setBoardState(prev => ({
       ...prev,
-      [`${row}-${col}`]: item.color,
+      [`${row}-${col}`]: currentPlayer.color,
     }));
 
-    // Update score (simple count for now)
-    const teamIndex = TEAMS.findIndex(t => t.color === item.color);
+    // Update score for the CURRENT PLAYER
+    const teamIndex = currentPlayerIndex;
     if (teamIndex !== -1) {
       setScores(prevScores => {
         const newScores = [...prevScores];
@@ -65,7 +65,7 @@ const Index = () => {
           />
         </div>
         <div className="flex flex-1 overflow-hidden">
-          <TileSidebar currentPlayerColor={currentPlayer.color} />
+          <TileSidebar />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
             <HexagonalBoard 
               rows={6} 
@@ -73,7 +73,6 @@ const Index = () => {
               hexagonSize={50}
               boardState={boardState}
               onDrop={handleDrop}
-              currentPlayerColor={currentPlayer.color}
             />
           </main>
         </div>

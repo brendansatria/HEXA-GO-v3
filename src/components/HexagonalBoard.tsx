@@ -12,10 +12,9 @@ interface HexagonalBoardProps {
   hexagonSize: number;
   boardState: { [key: string]: string };
   onDrop: (row: number, col: number, item: DraggableItem) => void;
-  currentPlayerColor: string;
 }
 
-const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize, boardState, onDrop, currentPlayerColor }) => {
+const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize, boardState, onDrop }) => {
   const sideLength = hexagonSize;
   const hexWidth = Math.sqrt(3) * sideLength;
   const hexHeight = 2 * sideLength;
@@ -37,7 +36,6 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
             sideLength={sideLength}
             color={boardState[key]}
             onDrop={(item) => onDrop(row, col, item)}
-            currentPlayerColor={currentPlayerColor}
             isOccupied={!!boardState[key]}
           />
         </div>
