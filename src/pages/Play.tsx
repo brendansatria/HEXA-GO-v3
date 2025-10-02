@@ -44,7 +44,7 @@ const Play = () => {
     const gameTiles = configuredTiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
 
     // Initialize board with starting tiles at fixed positions
-    const startingPositions = ['2-2', '2-5', '5-2', '5-5'];
+    const startingPositions = ['1-1', '1-4', '4-1', '4-4'];
     const shuffledStartingWords = shuffleArray(startingTileWords);
     const initialBoardState: { [key: string]: HexagonState } = {};
 
