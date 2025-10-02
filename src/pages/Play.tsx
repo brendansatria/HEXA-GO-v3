@@ -52,6 +52,7 @@ const Play = () => {
   const [hand, setHand] = useState<(Tile | null)[]>(Array(4).fill(null));
   const [totalGameTiles, setTotalGameTiles] = useState(0);
   const [placedTilesCount, setPlacedTilesCount] = useState(0);
+  const [lastMoveFeedback, setLastMoveFeedback] = useState<string[]>([]);
   
   const isInitialMount = useRef(true);
 
@@ -130,6 +131,28 @@ const Play = () => {
     const key = `${row}-${col}`;
     const points = calculateScore(row, col, item.tile, boardState);
 
+    const feedbackMessages: string[] = [];
+    const placedTile = item.tile;
+    const placedTileTags = [placedTile.tag1, placedTile.tag2, placedTile.tag3].filter(tag => tag && tag.trim() !== '');
+    if (placedTileTags.length > 0) {
+        const neighbors = getNeighbors(row, col);
+        for (const [nRow, nCol] of neighbors) {
+            const neighborKey = `${nRow}-${nCol}`;
+            const neighborHex = boardState[neighborKey];
+            if (neighborHex?.tile) {
+                const neighborTile = neighborHex.tile;
+                const neighborTags = [neighborTile.tag1, neighborTile.tag2, neighborTile.tag3].filter(tag => tag && tag.trim() !== '');
+                if (placedTileTags.some(tag => neighborTags.includes(tag))) {
+                    feedbackMessages.push(`'${placedTile.word}' & '${neighborTile.word}' matched.`);
+                }
+            }
+        }
+    }
+    if (feedbackMessages.length === 0) {
+        feedbackMessages.push("No tags matched this turn.");
+    }
+    setLastMoveFeedback(feedbackMessages);
+
     setBoardState(prev => ({ ...prev, [key]: { color: currentPlayer.textColor, tile: item.tile } }));
     setHand(prevHand => {
       const newHand = [...prevHand];
@@ -170,7 +193,7 @@ const Play = () => {
           <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
         </div>
         <div className="flex flex-1 overflow-hidden">
-          <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} />
+          <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} feedback={lastMoveFeedback} />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
             <HexagonalBoard rows={6} cols={6} hexagonSize={50} boardState={boardState} onDrop={handleDrop} />
           </main>
