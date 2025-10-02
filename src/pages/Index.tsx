@@ -15,7 +15,7 @@ const Index = () => {
         <div className="flex flex-1 overflow-hidden">
           <TileSidebar />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
-            <HexagonalBoard rows={10} cols={10} hexagonSize={30} />
+            <HexagonalBoard rows={6} cols={6} hexagonSize={50} />
           </main>
         </div>
         <div className="w-full">
