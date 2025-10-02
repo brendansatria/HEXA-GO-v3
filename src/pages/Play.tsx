@@ -37,7 +37,29 @@ const Play = () => {
   const isInitialMount = useRef(true);
 
   useEffect(() => {
+    // Separate starting tiles from the main deck
+    const startingTileWords = configuredTiles
+      .filter(tile => tile.isStartingTile && tile.word.trim() !== '')
+      .map(tile => tile.word);
+    
     const gameTiles = configuredTiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
+
+    // Initialize board with starting tiles at fixed positions
+    const startingPositions = ['2-2', '2-5', '5-2', '5-5'];
+    const shuffledStartingWords = shuffleArray(startingTileWords);
+    const initialBoardState: { [key: string]: HexagonState } = {};
+
+    startingPositions.forEach((pos, index) => {
+      if (shuffledStartingWords[index]) {
+        initialBoardState[pos] = {
+          color: 'text-gray-500', // Neutral color for starting tiles
+          word: shuffledStartingWords[index],
+        };
+      }
+    });
+    setBoardState(initialBoardState);
+
+    // Initialize deck and hand from the remaining game tiles
     if (gameTiles.length > 0) {
       const shuffledDeck = shuffleArray(gameTiles);
       const initialHand = shuffledDeck.slice(0, 4);
