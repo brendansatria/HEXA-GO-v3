@@ -5,9 +5,10 @@ interface HexagonProps {
   sideLength: number;
   className?: string;
   onClick?: () => void;
+  word?: string;
 }
 
-const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick }) => {
+const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word }) => {
   const width = Math.sqrt(3) * sideLength;
   const height = 2 * sideLength;
 
@@ -30,6 +31,18 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick }) => 
       className="cursor-pointer"
     >
       <polygon points={points} className={cn("fill-current stroke-white", className)} strokeWidth="1" />
+      {word && (
+        <text
+          x="50%"
+          y="50%"
+          dominantBaseline="middle"
+          textAnchor="middle"
+          className="fill-current text-black dark:text-white font-bold"
+          style={{ fontSize: `${sideLength / 4}px` }}
+        >
+          {word}
+        </text>
+      )}
     </svg>
   );
 };

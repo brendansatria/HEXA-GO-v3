@@ -6,11 +6,16 @@ interface DraggableItem {
   sideLength: number;
 }
 
+export interface HexagonState {
+  color: string | null;
+  word: string | null;
+}
+
 interface HexagonalBoardProps {
   rows: number;
   cols: number;
   hexagonSize: number;
-  boardState: { [key: string]: string };
+  boardState: { [key: string]: HexagonState };
   onDrop: (row: number, col: number, item: DraggableItem) => void;
 }
 
@@ -25,6 +30,7 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
       const xOffset = col * hexWidth + (row % 2 === 1 ? hexWidth / 2 : 0);
       const yOffset = row * (hexHeight * 0.75);
       const key = `${row}-${col}`;
+      const hexState = boardState[key] || { color: null, word: null };
 
       hexagons.push(
         <div
@@ -34,9 +40,10 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
         >
           <BoardHexagon
             sideLength={sideLength}
-            color={boardState[key]}
+            color={hexState.color}
+            word={hexState.word}
             onDrop={(item) => onDrop(row, col, item)}
-            isOccupied={!!boardState[key]}
+            isOccupied={!!hexState.color}
           />
         </div>
       );

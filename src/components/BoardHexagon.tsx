@@ -10,12 +10,13 @@ interface DraggableItem {
 
 interface BoardHexagonProps {
   sideLength: number;
-  color: string;
+  color: string | null;
+  word?: string;
   onDrop: (item: DraggableItem) => void;
   isOccupied: boolean;
 }
 
-const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop, isOccupied }) => {
+const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, word, onDrop, isOccupied }) => {
   const [{ isOver, canDropNow }, drop] = useDrop(() => ({
     accept: ItemTypes.HEXAGON,
     drop: (item: DraggableItem) => onDrop(item),
@@ -35,6 +36,7 @@ const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop, 
       <Hexagon 
         sideLength={sideLength} 
         className={`${color || baseColor} transition-colors`} 
+        word={word}
       />
     </div>
   );

@@ -1,37 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import HexagonalBoard from "@/components/HexagonalBoard";
+import HexagonalBoard, { HexagonState } from "@/components/HexagonalBoard";
 import TileSidebar from "@/components/TileSidebar";
 import TurnIndicator from "@/components/TurnIndicator";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomDragLayer from "@/components/CustomDragLayer";
 import { TEAMS } from "@/lib/teams";
+import { useGame } from "@/context/GameContext";
 
 interface DraggableItem {
   color: string;
   sideLength: number;
 }
 
-const Index = () => {
+const Play = () => {
+  const { tiles } = useGame();
   const [round, setRound] = useState(1);
-  const [turn, setTurn] = useState(0); // 0-3, represents turn within a round
-  const [boardState, setBoardState] = useState<{ [key: string]: string }>({});
+  const [turn, setTurn] = useState(0);
+  const [boardState, setBoardState] = useState<{ [key: string]: HexagonState }>({});
   const [scores, setScores] = useState(TEAMS.map(team => ({ ...team, score: 0 })));
 
-  // Calculate current player based on round and turn
+  const ROWS = 6;
+  const COLS = 6;
+
+  useEffect(() => {
+    const gameTiles = tiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
+    const newBoardState: { [key: string]: HexagonState } = {};
+    
+    let tileIndex = 0;
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        if (tileIndex < gameTiles.length) {
+          const key = `${row}-${col}`;
+          newBoardState[key] = {
+            color: null,
+            word: gameTiles[tileIndex].word,
+          };
+          tileIndex++;
+        }
+      }
+    }
+    setBoardState(newBoardState);
+  }, [tiles]);
+
   const startingPlayerIndex = (round - 1) % TEAMS.length;
   const currentPlayerIndex = (startingPlayerIndex + turn) % TEAMS.length;
   const currentPlayer = TEAMS[currentPlayerIndex];
 
   const handleDrop = (row: number, col: number, _item: DraggableItem) => {
-    // Update board state with the CURRENT PLAYER's color, ignoring the dragged item's color
+    const key = `${row}-${col}`;
     setBoardState(prev => ({
       ...prev,
-      [`${row}-${col}`]: currentPlayer.textColor,
+      [key]: {
+        ...prev[key],
+        color: currentPlayer.textColor,
+      },
     }));
 
-    // Update score for the CURRENT PLAYER
     const teamIndex = currentPlayerIndex;
     if (teamIndex !== -1) {
       setScores(prevScores => {
@@ -41,14 +67,11 @@ const Index = () => {
       });
     }
 
-    // Advance turn
     const nextTurn = turn + 1;
     if (nextTurn >= TEAMS.length) {
-      // End of round
       setTurn(0);
       setRound(prevRound => prevRound + 1);
     } else {
-      // Next turn in the same round
       setTurn(nextTurn);
     }
   };
@@ -68,8 +91,8 @@ const Index = () => {
           <TileSidebar currentPlayerColor={currentPlayer.textColor} />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
             <HexagonalBoard 
-              rows={6} 
-              cols={6} 
+              rows={ROWS} 
+              cols={COLS} 
               hexagonSize={50}
               boardState={boardState}
               onDrop={handleDrop}
@@ -84,4 +107,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Play;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table';
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { PlusCircle } from 'lucide-react';
+import { useGame } from '@/context/GameContext';
 
 interface TileRow {
   id: number;
@@ -27,6 +28,8 @@ const Setup = () => {
   const [rows, setRows] = useState<TileRow[]>([
     { id: 1, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
   ]);
+  const { setTiles } = useGame();
+  const navigate = useNavigate();
 
   const handleAddRow = () => {
     setRows([
@@ -43,14 +46,17 @@ const Setup = () => {
     );
   };
 
+  const handleSaveAndPlay = () => {
+    setTiles(rows);
+    navigate('/play');
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-between bg-white dark:bg-gray-950 p-4 md:p-8">
       <div className="w-full max-w-6xl">
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-4xl font-bold">Game Setup</h1>
-            <Link to="/">
-                <Button variant="outline">Back to Home</Button>
-            </Link>
+            <Button variant="outline" onClick={() => navigate('/')}>Back to Home</Button>
         </div>
 
         <div className="border rounded-lg">
@@ -119,9 +125,7 @@ const Setup = () => {
       </div>
 
       <div className="w-full max-w-6xl mt-8 flex flex-col items-center">
-        <Link to="/play">
-            <Button size="lg">Save & Play</Button>
-        </Link>
+        <Button size="lg" onClick={handleSaveAndPlay}>Save & Play</Button>
         <MadeWithDyad />
       </div>
     </div>
