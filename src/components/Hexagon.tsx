@@ -37,7 +37,7 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
           y="50%"
           dominantBaseline="middle"
           textAnchor="middle"
-          className="fill-current text-black dark:text-white font-bold"
+          className="fill-current text-white font-bold"
           style={{ fontSize: `${sideLength / 4}px` }}
         >
           {word}
