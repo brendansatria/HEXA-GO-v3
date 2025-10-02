@@ -29,7 +29,7 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
       hexagons.push(
         <div
           key={key}
-          className="absolute transition-transform duration-200 ease-in-out hover:scale-110"
+          className="absolute transition-transform duration-200 ease-in-out hover:scale-110 hover:z-10"
           style={{ left: `${xOffset}px`, top: `${yOffset}px` }}
         >
           <BoardHexagon
