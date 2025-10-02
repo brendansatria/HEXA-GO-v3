@@ -27,7 +27,6 @@ const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop, 
   }), [isOccupied, onDrop]);
 
   const baseColor = "text-gray-300 dark:text-gray-700";
-  const hoverColor = "hover:text-blue-500 dark:hover:text-blue-400";
   
   const overlayClass = isOver && canDropNow ? 'opacity-50' : 'opacity-100';
 
@@ -35,7 +34,7 @@ const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop, 
     <div ref={drop} className={overlayClass}>
       <Hexagon 
         sideLength={sideLength} 
-        className={`${color || baseColor} ${hoverColor} transition-colors`} 
+        className={`${color || baseColor} transition-colors`} 
       />
     </div>
   );
