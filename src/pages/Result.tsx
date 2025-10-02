@@ -1,8 +1,10 @@
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Trophy } from 'lucide-react';
 import { Team } from '@/lib/teams';
+import { Tile } from '@/context/GameContext';
 
 interface Score extends Team {
   score: number;
@@ -11,6 +13,7 @@ interface Score extends Team {
 const Result = () => {
   const location = useLocation();
   const scores: Score[] = location.state?.scores || [];
+  const tiles: Tile[] = location.state?.tiles || [];
 
   if (scores.length === 0) {
     return (
@@ -25,6 +28,14 @@ const Result = () => {
 
   const sortedScores = [...scores].sort((a, b) => b.score - a.score);
   const maxScore = sortedScores.length > 0 ? sortedScores[0].score : 0;
+
+  const allTags = new Set<string>();
+  tiles.forEach(tile => {
+    if (tile.tag1 && tile.tag1.trim() !== '') allTags.add(tile.tag1.trim());
+    if (tile.tag2 && tile.tag2.trim() !== '') allTags.add(tile.tag2.trim());
+    if (tile.tag3 && tile.tag3.trim() !== '') allTags.add(tile.tag3.trim());
+  });
+  const uniqueTags = Array.from(allTags).sort();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
@@ -54,6 +65,16 @@ const Result = () => {
             })}
           </div>
         </CardContent>
+        {uniqueTags.length > 0 && (
+          <CardFooter className="flex-col items-start pt-4 border-t">
+            <h3 className="text-md font-semibold mb-3 text-gray-700 dark:text-gray-300">Tags in this Game</h3>
+            <div className="flex flex-wrap gap-2">
+              {uniqueTags.map(tag => (
+                <Badge key={tag} variant="secondary">{tag}</Badge>
+              ))}
+            </div>
+          </CardFooter>
+        )}
       </Card>
       <Link to="/" className="mt-8">
         <Button size="lg">Play Again</Button>

@@ -172,7 +172,7 @@ const Play = () => {
     setPlacedTilesCount(newPlacedCount);
 
     if (totalGameTiles > 0 && newPlacedCount >= totalGameTiles) {
-      navigate('/result', { state: { scores: finalScores } });
+      navigate('/result', { state: { scores: finalScores, tiles: configuredTiles } });
       return;
     }
 
