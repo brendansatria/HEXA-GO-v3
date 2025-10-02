@@ -29,7 +29,7 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick }) => 
       onClick={onClick}
       className="cursor-pointer"
     >
-      <polygon points={points} className={cn("fill-current", className)} />
+      <polygon points={points} className={cn("fill-current stroke-white", className)} strokeWidth="1" />
     </svg>
   );
 };
