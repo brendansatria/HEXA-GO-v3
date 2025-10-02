@@ -1,27 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BoardHexagon from './BoardHexagon';
-
-interface HexagonalBoardProps {
-  rows: number;
-  cols: number;
-  hexagonSize: number;
-}
 
 interface DraggableItem {
   color: string;
   sideLength: number;
 }
 
-const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize }) => {
-  const [boardState, setBoardState] = useState<{ [key: string]: string }>({});
+interface HexagonalBoardProps {
+  rows: number;
+  cols: number;
+  hexagonSize: number;
+  boardState: { [key: string]: string };
+  onDrop: (row: number, col: number, item: DraggableItem) => void;
+  currentPlayerColor: string;
+}
 
-  const handleDrop = (row: number, col: number, item: DraggableItem) => {
-    setBoardState(prev => ({
-      ...prev,
-      [`${row}-${col}`]: item.color,
-    }));
-  };
-
+const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize, boardState, onDrop, currentPlayerColor }) => {
   const sideLength = hexagonSize;
   const hexWidth = Math.sqrt(3) * sideLength;
   const hexHeight = 2 * sideLength;
@@ -42,7 +36,9 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
           <BoardHexagon
             sideLength={sideLength}
             color={boardState[key]}
-            onDrop={(item) => handleDrop(row, col, item)}
+            onDrop={(item) => onDrop(row, col, item)}
+            currentPlayerColor={currentPlayerColor}
+            isOccupied={!!boardState[key]}
           />
         </div>
       );
