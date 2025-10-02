@@ -1,20 +1,129 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { MadeWithDyad } from '@/components/made-with-dyad';
+import { PlusCircle } from 'lucide-react';
+
+interface TileRow {
+  id: number;
+  isStartingTile: boolean;
+  word: string;
+  tag1: string;
+  tag2: string;
+  tag3: string;
+}
 
 const Setup = () => {
+  const [rows, setRows] = useState<TileRow[]>([
+    { id: 1, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
+  ]);
+
+  const handleAddRow = () => {
+    setRows([
+      ...rows,
+      { id: rows.length + 1, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
+    ]);
+  };
+
+  const handleInputChange = (id: number, field: keyof TileRow, value: string | boolean) => {
+    setRows(
+      rows.map((row) =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-950">
-      <div className="flex-1 flex flex-col items-center justify-center text-center">
-        <h1 className="text-5xl font-bold mb-6">Game Setup</h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 mb-10">
-          This is where you'll be able to customize your game settings.
-        </p>
-        <Link to="/">
-          <Button variant="outline">Back to Home</Button>
-        </Link>
+    <div className="min-h-screen flex flex-col items-center justify-between bg-white dark:bg-gray-950 p-4 md:p-8">
+      <div className="w-full max-w-6xl">
+        <div className="flex justify-between items-center mb-6">
+            <h1 className="text-4xl font-bold">Game Setup</h1>
+            <Link to="/">
+                <Button variant="outline">Back to Home</Button>
+            </Link>
+        </div>
+
+        <div className="border rounded-lg">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px]">No.</TableHead>
+                <TableHead className="w-[120px]">Starting Tile</TableHead>
+                <TableHead>Tile's Word</TableHead>
+                <TableHead>Tag 1</TableHead>
+                <TableHead>Tag 2</TableHead>
+                <TableHead>Tag 3</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map((row, index) => (
+                <TableRow key={row.id}>
+                  <TableCell className="font-medium">{index + 1}</TableCell>
+                  <TableCell className="text-center">
+                    <Checkbox
+                      checked={row.isStartingTile}
+                      onCheckedChange={(checked) =>
+                        handleInputChange(row.id, 'isStartingTile', !!checked)
+                      }
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      value={row.word}
+                      onChange={(e) => handleInputChange(row.id, 'word', e.target.value)}
+                      placeholder="Enter word..."
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      value={row.tag1}
+                      onChange={(e) => handleInputChange(row.id, 'tag1', e.target.value)}
+                      placeholder="Enter tag..."
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      value={row.tag2}
+                      onChange={(e) => handleInputChange(row.id, 'tag2', e.target.value)}
+                      placeholder="Enter tag..."
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      value={row.tag3}
+                      onChange={(e) => handleInputChange(row.id, 'tag3', e.target.value)}
+                      placeholder="Enter tag..."
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="mt-4">
+            <Button variant="outline" onClick={handleAddRow}>
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Add Row
+            </Button>
+        </div>
       </div>
-      <MadeWithDyad />
+
+      <div className="w-full max-w-6xl mt-8 flex flex-col items-center">
+        <Link to="/play">
+            <Button size="lg">Save & Play</Button>
+        </Link>
+        <MadeWithDyad />
+      </div>
     </div>
   );
 };
