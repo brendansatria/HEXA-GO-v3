@@ -16,7 +16,7 @@ interface DraggableHexagonProps {
 const DraggableHexagon: React.FC<DraggableHexagonProps> = ({ sideLength, color, tile, handIndex }) => {
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.HEXAGON,
-    item: { color, sideLength, word: tile.word, handIndex },
+    item: { color, sideLength, tile, handIndex },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

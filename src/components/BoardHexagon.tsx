@@ -2,10 +2,13 @@ import React from 'react';
 import { useDrop } from 'react-dnd';
 import Hexagon from './Hexagon';
 import { ItemTypes } from '@/lib/dnd';
+import type { Tile } from '@/context/GameContext';
 
 interface DraggableItem {
   color: string;
   sideLength: number;
+  tile: Tile;
+  handIndex: number;
 }
 
 interface BoardHexagonProps {

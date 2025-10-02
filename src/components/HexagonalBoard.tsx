@@ -1,14 +1,17 @@
 import React from 'react';
 import BoardHexagon from './BoardHexagon';
+import type { Tile } from '@/context/GameContext';
 
 interface DraggableItem {
   color: string;
   sideLength: number;
+  tile: Tile;
+  handIndex: number;
 }
 
 export interface HexagonState {
   color: string | null;
-  word: string | null;
+  tile: Tile | null;
 }
 
 interface HexagonalBoardProps {
@@ -30,7 +33,7 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
       const xOffset = col * hexWidth + (row % 2 === 1 ? hexWidth / 2 : 0);
       const yOffset = row * (hexHeight * 0.75);
       const key = `${row}-${col}`;
-      const hexState = boardState[key] || { color: null, word: null };
+      const hexState = boardState[key] || { color: null, tile: null };
 
       hexagons.push(
         <div
@@ -41,9 +44,9 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
           <BoardHexagon
             sideLength={sideLength}
             color={hexState.color}
-            word={hexState.word}
+            word={hexState.tile?.word}
             onDrop={(item) => onDrop(row, col, item)}
-            isOccupied={!!hexState.color}
+            isOccupied={!!hexState.tile}
           />
         </div>
       );

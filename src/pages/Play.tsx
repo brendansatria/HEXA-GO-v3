@@ -11,7 +11,7 @@ import { useGame, Tile } from "@/context/GameContext";
 interface DraggableItem {
   color: string;
   sideLength: number;
-  word: string;
+  tile: Tile;
   handIndex: number;
 }
 
@@ -22,6 +22,28 @@ const shuffleArray = (array: any[]) => {
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
+};
+
+const getNeighbors = (row: number, col: number): [number, number][] => {
+  if (row % 2 === 1) { // Odd rows
+    return [
+      [row, col - 1],
+      [row, col + 1],
+      [row - 1, col],
+      [row - 1, col + 1],
+      [row + 1, col],
+      [row + 1, col + 1],
+    ];
+  } else { // Even rows
+    return [
+      [row, col - 1],
+      [row, col + 1],
+      [row - 1, col - 1],
+      [row - 1, col],
+      [row + 1, col - 1],
+      [row + 1, col],
+    ];
+  }
 };
 
 const Play = () => {
@@ -36,29 +58,23 @@ const Play = () => {
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    // Separate starting tiles from the main deck
-    const startingTileWords = configuredTiles
-      .filter(tile => tile.isStartingTile && tile.word.trim() !== '')
-      .map(tile => tile.word);
-    
+    const startingTiles = configuredTiles.filter(tile => tile.isStartingTile && tile.word.trim() !== '');
     const gameTiles = configuredTiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
 
-    // Initialize board with starting tiles at fixed positions
     const startingPositions = ['1-1', '1-4', '4-1', '4-4'];
-    const shuffledStartingWords = shuffleArray(startingTileWords);
+    const shuffledStartingTiles = shuffleArray(startingTiles);
     const initialBoardState: { [key: string]: HexagonState } = {};
 
     startingPositions.forEach((pos, index) => {
-      if (shuffledStartingWords[index]) {
+      if (shuffledStartingTiles[index]) {
         initialBoardState[pos] = {
-          color: 'text-gray-500', // Neutral color for starting tiles
-          word: shuffledStartingWords[index],
+          color: 'text-gray-500',
+          tile: shuffledStartingTiles[index],
         };
       }
     });
     setBoardState(initialBoardState);
 
-    // Initialize deck and hand from the remaining game tiles
     if (gameTiles.length > 0) {
       const shuffledDeck = shuffleArray(gameTiles);
       const initialHand = shuffledDeck.slice(0, 4);
@@ -96,14 +112,38 @@ const Play = () => {
   const currentPlayerIndex = (startingPlayerIndex + turn) % TEAMS.length;
   const currentPlayer = TEAMS[currentPlayerIndex];
 
+  const calculateScore = (row: number, col: number, placedTile: Tile, currentBoardState: { [key: string]: HexagonState }) => {
+    let score = 0;
+    const placedTileTags = [placedTile.tag1, placedTile.tag2, placedTile.tag3].filter(tag => tag && tag.trim() !== '');
+    if (placedTileTags.length === 0) return 0;
+
+    const neighbors = getNeighbors(row, col);
+
+    for (const [nRow, nCol] of neighbors) {
+        const neighborKey = `${nRow}-${nCol}`;
+        const neighborHex = currentBoardState[neighborKey];
+
+        if (neighborHex && neighborHex.tile) {
+            const neighborTags = [neighborHex.tile.tag1, neighborHex.tile.tag2, neighborHex.tile.tag3].filter(tag => tag && tag.trim() !== '');
+            const hasCommonTag = placedTileTags.some(tag => neighborTags.includes(tag));
+            if (hasCommonTag) {
+                score += 2;
+            }
+        }
+    }
+    return score;
+  };
+
   const handleDrop = (row: number, col: number, item: DraggableItem) => {
     const key = `${row}-${col}`;
+    
+    const points = calculateScore(row, col, item.tile, boardState);
+
     setBoardState(prev => ({
       ...prev,
       [key]: {
-        ...prev[key],
         color: currentPlayer.textColor,
-        word: item.word,
+        tile: item.tile,
       },
     }));
 
@@ -113,13 +153,15 @@ const Play = () => {
       return newHand;
     });
 
-    const teamIndex = currentPlayerIndex;
-    if (teamIndex !== -1) {
-      setScores(prevScores => {
-        const newScores = [...prevScores];
-        newScores[teamIndex].score += 1;
-        return newScores;
-      });
+    if (points > 0) {
+      const teamIndex = currentPlayerIndex;
+      if (teamIndex !== -1) {
+        setScores(prevScores => {
+          const newScores = [...prevScores];
+          newScores[teamIndex].score += points;
+          return newScores;
+        });
+      }
     }
 
     const nextTurn = turn + 1;
