@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import Hexagon from './Hexagon';
 import { ItemTypes } from '@/lib/dnd';
 
@@ -9,18 +10,22 @@ interface DraggableHexagonProps {
 }
 
 const DraggableHexagon: React.FC<DraggableHexagonProps> = ({ sideLength, color }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.HEXAGON,
-    item: { color },
+    item: { color, sideLength },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
 
+  React.useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
+
   return (
     <div
       ref={drag}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
+      style={{ opacity: isDragging ? 0 : 1 }}
       className="cursor-grab"
     >
       <Hexagon sideLength={sideLength} className={color} />

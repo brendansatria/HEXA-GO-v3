@@ -7,10 +7,15 @@ interface HexagonalBoardProps {
   hexagonSize: number;
 }
 
+interface DraggableItem {
+  color: string;
+  sideLength: number;
+}
+
 const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize }) => {
   const [boardState, setBoardState] = useState<{ [key: string]: string }>({});
 
-  const handleDrop = (row: number, col: number, item: { color: string }) => {
+  const handleDrop = (row: number, col: number, item: DraggableItem) => {
     setBoardState(prev => ({
       ...prev,
       [`${row}-${col}`]: item.color,

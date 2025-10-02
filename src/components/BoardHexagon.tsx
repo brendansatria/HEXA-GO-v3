@@ -3,16 +3,21 @@ import { useDrop } from 'react-dnd';
 import Hexagon from './Hexagon';
 import { ItemTypes } from '@/lib/dnd';
 
+interface DraggableItem {
+  color: string;
+  sideLength: number;
+}
+
 interface BoardHexagonProps {
   sideLength: number;
   color: string;
-  onDrop: (item: { color: string }) => void;
+  onDrop: (item: DraggableItem) => void;
 }
 
 const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.HEXAGON,
-    drop: (item: { color: string }) => onDrop(item),
+    drop: (item: DraggableItem) => onDrop(item),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),

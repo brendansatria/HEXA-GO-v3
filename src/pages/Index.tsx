@@ -4,10 +4,12 @@ import TileSidebar from "@/components/TileSidebar";
 import Scoreboard from "@/components/Scoreboard";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import CustomDragLayer from "@/components/CustomDragLayer";
 
 const Index = () => {
   return (
     <DndProvider backend={HTML5Backend}>
+      <CustomDragLayer />
       <div className="min-h-screen w-full flex flex-col bg-white dark:bg-gray-950">
         <div className="p-4 border-b dark:border-gray-800">
           <Scoreboard />
