@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import HexagonalBoard, { HexagonState } from "@/components/HexagonalBoard";
 import TileSidebar from "@/components/TileSidebar";
@@ -7,56 +7,90 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomDragLayer from "@/components/CustomDragLayer";
 import { TEAMS } from "@/lib/teams";
-import { useGame } from "@/context/GameContext";
+import { useGame, Tile } from "@/context/GameContext";
 
 interface DraggableItem {
   color: string;
   sideLength: number;
+  word: string;
+  handIndex: number;
 }
 
+const shuffleArray = (array: any[]) => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
+
 const Play = () => {
-  const { tiles } = useGame();
+  const { tiles: configuredTiles } = useGame();
   const [round, setRound] = useState(1);
   const [turn, setTurn] = useState(0);
   const [boardState, setBoardState] = useState<{ [key: string]: HexagonState }>({});
   const [scores, setScores] = useState(TEAMS.map(team => ({ ...team, score: 0 })));
-
-  const ROWS = 6;
-  const COLS = 6;
+  const [deck, setDeck] = useState<Tile[]>([]);
+  const [hand, setHand] = useState<(Tile | null)[]>(Array(4).fill(null));
+  
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    const gameTiles = tiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
-    const newBoardState: { [key: string]: HexagonState } = {};
-    
-    let tileIndex = 0;
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLS; col++) {
-        if (tileIndex < gameTiles.length) {
-          const key = `${row}-${col}`;
-          newBoardState[key] = {
-            color: null,
-            word: gameTiles[tileIndex].word,
-          };
-          tileIndex++;
-        }
+    const gameTiles = configuredTiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
+    if (gameTiles.length > 0) {
+      const shuffledDeck = shuffleArray(gameTiles);
+      const initialHand = shuffledDeck.slice(0, 4);
+      const remainingDeck = shuffledDeck.slice(4);
+      
+      setHand(initialHand.concat(Array(4 - initialHand.length).fill(null)));
+      setDeck(remainingDeck);
+    }
+  }, [configuredTiles]);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    let newDeck = [...deck];
+    const newHand = [...hand];
+    let handChanged = false;
+
+    for (let i = 0; i < newHand.length; i++) {
+      if (newHand[i] === null && newDeck.length > 0) {
+        newHand[i] = newDeck.shift()!;
+        handChanged = true;
       }
     }
-    setBoardState(newBoardState);
-  }, [tiles]);
+
+    if (handChanged) {
+      setHand(newHand);
+      setDeck(newDeck);
+    }
+  }, [turn, round]);
 
   const startingPlayerIndex = (round - 1) % TEAMS.length;
   const currentPlayerIndex = (startingPlayerIndex + turn) % TEAMS.length;
   const currentPlayer = TEAMS[currentPlayerIndex];
 
-  const handleDrop = (row: number, col: number, _item: DraggableItem) => {
+  const handleDrop = (row: number, col: number, item: DraggableItem) => {
     const key = `${row}-${col}`;
     setBoardState(prev => ({
       ...prev,
       [key]: {
         ...prev[key],
         color: currentPlayer.textColor,
+        word: item.word,
       },
     }));
+
+    setHand(prevHand => {
+      const newHand = [...prevHand];
+      newHand[item.handIndex] = null;
+      return newHand;
+    });
 
     const teamIndex = currentPlayerIndex;
     if (teamIndex !== -1) {
@@ -88,11 +122,14 @@ const Play = () => {
           />
         </div>
         <div className="flex flex-1 overflow-hidden">
-          <TileSidebar currentPlayerColor={currentPlayer.textColor} />
+          <TileSidebar 
+            currentPlayerColor={currentPlayer.textColor}
+            hand={hand}
+          />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
             <HexagonalBoard 
-              rows={ROWS} 
-              cols={COLS} 
+              rows={6} 
+              cols={6} 
               hexagonSize={50}
               boardState={boardState}
               onDrop={handleDrop}
