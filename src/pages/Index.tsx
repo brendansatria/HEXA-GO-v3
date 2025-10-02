@@ -65,7 +65,7 @@ const Index = () => {
           />
         </div>
         <div className="flex flex-1 overflow-hidden">
-          <TileSidebar />
+          <TileSidebar currentPlayerColor={currentPlayer.color} />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
             <HexagonalBoard 
               rows={6} 
