@@ -24,7 +24,7 @@ const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, onDrop, 
       isOver: !!monitor.isOver(),
       canDropNow: !!monitor.canDrop(),
     }),
-  }), [isOccupied]);
+  }), [isOccupied, onDrop]);
 
   const baseColor = "text-gray-300 dark:text-gray-700";
   const hoverColor = "hover:text-blue-500 dark:hover:text-blue-400";

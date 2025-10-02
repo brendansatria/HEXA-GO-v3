@@ -17,7 +17,7 @@ const DraggableHexagon: React.FC<DraggableHexagonProps> = ({ sideLength, color }
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
-  }), []);
+  }), [color, sideLength]);
 
   React.useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
