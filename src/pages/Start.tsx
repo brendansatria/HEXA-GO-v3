@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { MadeWithDyad } from '@/components/made-with-dyad';
 
 const Start = () => {
   return (
@@ -18,7 +17,6 @@ const Start = () => {
           </Link>
         </div>
       </div>
-      <MadeWithDyad />
     </div>
   );
 };

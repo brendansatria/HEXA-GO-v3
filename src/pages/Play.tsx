@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import HexagonalBoard, { HexagonState } from "@/components/HexagonalBoard";
 import TileSidebar from "@/components/TileSidebar";
 import TurnIndicator from "@/components/TurnIndicator";
@@ -157,9 +156,6 @@ const Play = () => {
               onDrop={handleDrop}
             />
           </main>
-        </div>
-        <div className="w-full">
-          <MadeWithDyad />
         </div>
       </div>
     </DndProvider>

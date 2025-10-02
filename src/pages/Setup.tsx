@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { PlusCircle } from 'lucide-react';
 import { useGame } from '@/context/GameContext';
 
@@ -126,7 +125,6 @@ const Setup = () => {
 
       <div className="w-full max-w-6xl mt-8 flex flex-col items-center">
         <Button size="lg" onClick={handleSaveAndPlay}>Save & Play</Button>
-        <MadeWithDyad />
       </div>
     </div>
   );
