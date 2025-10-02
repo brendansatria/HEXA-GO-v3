@@ -25,7 +25,7 @@ const TurnIndicator: React.FC<TurnIndicatorProps> = ({ round, currentPlayerName,
           {scores.map((item) => (
             <div key={item.name} className="p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
               <div className="flex items-center justify-center mb-2">
-                <span className={`w-4 h-4 rounded-full mr-2 ${item.color.replace('text-', 'bg-')}`}></span>
+                <span className={`w-4 h-4 rounded-full mr-2 ${item.bgColor}`}></span>
                 <h3 className="text-lg font-semibold">{item.name}</h3>
               </div>
               <p className="text-3xl font-bold">{item.score}</p>

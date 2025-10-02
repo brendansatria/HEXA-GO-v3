@@ -28,7 +28,7 @@ const Index = () => {
     // Update board state with the CURRENT PLAYER's color, ignoring the dragged item's color
     setBoardState(prev => ({
       ...prev,
-      [`${row}-${col}`]: currentPlayer.color,
+      [`${row}-${col}`]: currentPlayer.textColor,
     }));
 
     // Update score for the CURRENT PLAYER
@@ -65,7 +65,7 @@ const Index = () => {
           />
         </div>
         <div className="flex flex-1 overflow-hidden">
-          <TileSidebar currentPlayerColor={currentPlayer.color} />
+          <TileSidebar currentPlayerColor={currentPlayer.textColor} />
           <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
             <HexagonalBoard 
               rows={6} 
