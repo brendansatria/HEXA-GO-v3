@@ -28,7 +28,7 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize
   const hexWidth = Math.sqrt(3) * sideLength;
   const hexHeight = 2 * sideLength;
 
-  const excludedHexes = ['1-5', '2-5', '4-5'];
+  const excludedHexes = ['1-5', '3-5', '5-5'];
 
   const hexagons = [];
   for (let row = 0; row < rows; row++) {
