@@ -87,6 +87,16 @@ const Setup = () => {
     navigate('/play');
   };
 
+  const validStartingTilesCount = startingTiles.filter(
+    (tile) => tile.word.trim() !== '' && tile.tag1.trim() !== ''
+  ).length;
+
+  const validReserveTilesCount = reserveTiles.filter(
+    (tile) => tile.word.trim() !== '' && tile.tag1.trim() !== ''
+  ).length;
+
+  const isSaveDisabled = validStartingTilesCount < 2 || validReserveTilesCount < 8;
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-between bg-white dark:bg-gray-950 p-4 md:p-8">
       <div className="w-full max-w-6xl">
@@ -239,7 +249,13 @@ const Setup = () => {
       </div>
 
       <div className="w-full max-w-6xl mt-8 flex flex-col items-center">
-        <Button size="lg" onClick={handleSaveAndPlay}>Save & Play</Button>
+        <Button size="lg" onClick={handleSaveAndPlay} disabled={isSaveDisabled}>Save & Play</Button>
+        {isSaveDisabled && (
+            <p className="text-sm text-red-500 mt-2 text-center">
+                A minimum of 2 starting tiles and 8 reserve tiles are required.<br/>
+                Each required tile must have at least "Tile's Word" and "Tag 1" filled.
+            </p>
+        )}
       </div>
     </div>
   );
