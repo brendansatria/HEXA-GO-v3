@@ -221,7 +221,7 @@ const Play = () => {
                 ))
               ) : (
                 <div className="flex items-center justify-center h-full">
-                  <p className="text-center italic text-gray-500">Place a tile to see feedback.</p>
+                  <p className="text-center italic text-gray-500">Place a tile to see actions history.</p>
                 </div>
               )}
             </div>
