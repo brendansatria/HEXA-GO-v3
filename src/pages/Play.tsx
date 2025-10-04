@@ -208,11 +208,12 @@ const Play = () => {
       <div className="min-h-screen w-full flex">
         {/* Left Sidebar */}
         <div className="w-80 shrink-0 p-4 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center space-y-6 bg-gray-50 dark:bg-gray-900">
+          <img src="/hexago_logo.png" alt="Hexa Go! Logo" className="w-48" />
           <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
           
-          {/* Feedback Box */}
+          {/* Actions Box */}
           <div className="w-full">
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2 text-center">Feedback</h3>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2 text-center">Actions</h3>
             <div className="p-3 border rounded-lg bg-white dark:bg-gray-800 min-h-[120px] text-sm text-gray-700 dark:text-gray-300 space-y-1">
               {lastMoveFeedback.length > 0 ? (
                 lastMoveFeedback.map((msg, index) => (
