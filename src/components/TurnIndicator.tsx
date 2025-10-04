@@ -14,21 +14,21 @@ interface TurnIndicatorProps {
 
 const TurnIndicator: React.FC<TurnIndicatorProps> = ({ round, currentPlayerName, scores }) => {
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-center text-2xl font-bold">
-          Round {round}: {currentPlayerName}'s Turn
+    <Card className="w-full">
+      <CardHeader className="p-4">
+        <CardTitle className="text-center text-xl font-bold">
+          Round {round}:<br/>{currentPlayerName}'s Turn
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+      <CardContent className="p-4">
+        <div className="grid grid-cols-2 gap-2 text-center">
           {scores.map((item) => (
-            <div key={item.name} className="p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
-              <div className="flex items-center justify-center mb-2">
-                <span className={`w-4 h-4 rounded-full mr-2 ${item.bgColor}`}></span>
-                <h3 className="text-lg font-semibold">{item.name}</h3>
+            <div key={item.name} className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+              <div className="flex items-center justify-center mb-1">
+                <span className={`w-3 h-3 rounded-full mr-2 ${item.bgColor}`}></span>
+                <h3 className="text-sm font-semibold">{item.name}</h3>
               </div>
-              <p className="text-3xl font-bold">{item.score}</p>
+              <p className="text-2xl font-bold">{item.score}</p>
             </div>
           ))}
         </div>

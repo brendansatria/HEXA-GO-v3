@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import HexagonalBoard, { HexagonState } from "@/components/HexagonalBoard";
-import TileSidebar from "@/components/TileSidebar";
 import TurnIndicator from "@/components/TurnIndicator";
 import HowToPlayDialog from "@/components/HowToPlayDialog";
+import DraggableHexagon from "@/components/DraggableHexagon";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomDragLayer from "@/components/CustomDragLayer";
@@ -189,19 +189,56 @@ const Play = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <CustomDragLayer />
-      <div className="min-h-screen w-full flex flex-col bg-white dark:bg-gray-950">
-        <header className="p-4 border-b dark:border-gray-800 relative">
+      <div className="min-h-screen w-full flex bg-white dark:bg-gray-950">
+        {/* Left Sidebar */}
+        <div className="w-80 shrink-0 p-4 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center space-y-6 bg-gray-50 dark:bg-gray-900">
           <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
-          <div className="absolute top-1/2 right-4 -translate-y-1/2">
+          
+          {/* Hand Tiles */}
+          <div className="w-full">
+            <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4 text-center">Your Tiles</h2>
+            <div className="grid grid-cols-2 gap-4 place-items-center">
+              {hand.map((tile, index) => (
+                <div key={index} className="w-[120px] h-[120px] flex items-center justify-center">
+                  {tile ? (
+                    <DraggableHexagon
+                      sideLength={50}
+                      color={currentPlayer.textColor}
+                      tile={tile}
+                      handIndex={index}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 dark:bg-gray-800 rounded-md" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Feedback Box */}
+          <div className="w-full">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2 text-center">Feedback</h3>
+            <div className="p-3 border rounded-lg bg-white dark:bg-gray-800 min-h-[120px] text-sm text-gray-700 dark:text-gray-300 space-y-1">
+              {lastMoveFeedback.length > 0 ? (
+                lastMoveFeedback.map((msg, index) => (
+                  <p key={index}>- {msg}</p>
+                ))
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-center italic text-gray-500">Place a tile to see feedback.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Board Area */}
+        <main className="flex-1 flex items-center justify-center p-4 overflow-auto relative">
+          <div className="absolute top-4 right-4 z-10">
             <HowToPlayDialog />
           </div>
-        </header>
-        <div className="flex flex-1 overflow-hidden">
-          <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} feedback={lastMoveFeedback} />
-          <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
-            <HexagonalBoard rows={6} cols={6} hexagonSize={60} boardState={boardState} onDrop={handleDrop} />
-          </main>
-        </div>
+          <HexagonalBoard rows={6} cols={6} hexagonSize={60} boardState={boardState} onDrop={handleDrop} />
+        </main>
       </div>
     </DndProvider>
   );
