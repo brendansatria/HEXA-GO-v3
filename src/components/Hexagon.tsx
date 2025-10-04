@@ -30,7 +30,12 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
       onClick={onClick}
       className="cursor-pointer"
     >
-      <polygon points={points} className={cn("fill-current stroke-white", className)} strokeWidth="1" />
+      <polygon 
+        points={points} 
+        className={cn("fill-current stroke-white", className)} 
+        strokeWidth="3" 
+        strokeLinejoin="round" 
+      />
       {word && (
         <text
           x="50%"
