@@ -20,19 +20,27 @@ interface HexagonalBoardProps {
   hexagonSize: number;
   boardState: { [key: string]: HexagonState };
   onDrop: (row: number, col: number, item: DraggableItem) => void;
+  isTwoPlayerSetup?: boolean;
 }
 
-const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize, boardState, onDrop }) => {
+const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize, boardState, onDrop, isTwoPlayerSetup = false }) => {
   const sideLength = hexagonSize;
   const hexWidth = Math.sqrt(3) * sideLength;
   const hexHeight = 2 * sideLength;
 
+  const excludedHexes = ['1-5', '2-5', '4-5'];
+
   const hexagons = [];
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
+      const key = `${row}-${col}`;
+
+      if (isTwoPlayerSetup && excludedHexes.includes(key)) {
+        continue;
+      }
+
       const xOffset = col * hexWidth + (row % 2 === 1 ? hexWidth / 2 : 0);
       const yOffset = row * (hexHeight * 0.75);
-      const key = `${row}-${col}`;
       const hexState = boardState[key] || { color: null, tile: null };
 
       hexagons.push(

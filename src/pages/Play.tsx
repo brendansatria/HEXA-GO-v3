@@ -54,6 +54,7 @@ const Play = () => {
   const [totalGameTiles, setTotalGameTiles] = useState(0);
   const [placedTilesCount, setPlacedTilesCount] = useState(0);
   const [lastMoveFeedback, setLastMoveFeedback] = useState<string[]>([]);
+  const [isTwoPlayerSetup, setIsTwoPlayerSetup] = useState(false);
   
   const isInitialMount = useRef(true);
 
@@ -65,8 +66,10 @@ const Play = () => {
     let startingPositions: string[];
     if (startingTiles.length === 2) {
       startingPositions = ['2-1', '2-4'];
+      setIsTwoPlayerSetup(true);
     } else {
       startingPositions = ['1-1', '1-4', '4-1', '4-4'];
+      setIsTwoPlayerSetup(false);
     }
 
     const shuffledStartingTiles = shuffleArray(startingTiles);
@@ -241,7 +244,7 @@ const Play = () => {
               ))}
             </div>
             
-            <HexagonalBoard rows={6} cols={6} hexagonSize={75} boardState={boardState} onDrop={handleDrop} />
+            <HexagonalBoard rows={6} cols={6} hexagonSize={75} boardState={boardState} onDrop={handleDrop} isTwoPlayerSetup={isTwoPlayerSetup} />
           </div>
         </main>
       </div>
