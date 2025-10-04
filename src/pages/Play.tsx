@@ -220,10 +220,10 @@ const Play = () => {
             {/* Hand Tiles Column */}
             <div className="flex flex-col gap-4">
               {hand.map((tile, index) => (
-                <div key={index} className="w-[120px] h-[120px] flex items-center justify-center">
+                <div key={index} className="w-[150px] h-[150px] flex items-center justify-center">
                   {tile ? (
                     <DraggableHexagon
-                      sideLength={50}
+                      sideLength={70}
                       color={currentPlayer.textColor}
                       tile={tile}
                       handIndex={index}
@@ -235,7 +235,7 @@ const Play = () => {
               ))}
             </div>
             
-            <HexagonalBoard rows={6} cols={6} hexagonSize={60} boardState={boardState} onDrop={handleDrop} />
+            <HexagonalBoard rows={6} cols={6} hexagonSize={75} boardState={boardState} onDrop={handleDrop} />
           </div>
         </main>
       </div>
