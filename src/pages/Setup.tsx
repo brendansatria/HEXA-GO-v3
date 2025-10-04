@@ -32,6 +32,28 @@ const Setup = () => {
   const { setTiles } = useGame();
   const navigate = useNavigate();
 
+  const handleDefaultSetup = () => {
+    const defaultStartingTiles: TileRow[] = [
+      { id: 1, word: 'JAKARTA', tag1: 'JAKARTA', tag2: '', tag3: '' },
+      { id: 2, word: 'BANDUNG', tag1: 'BANDUNG', tag2: '', tag3: '' },
+    ];
+
+    const defaultReserveTiles: TileRow[] = [
+      { id: 3, word: 'BETAWI', tag1: 'JAKARTA', tag2: '', tag3: '' },
+      { id: 4, word: 'SUNDA', tag1: 'BANDUNG', tag2: '', tag3: '' },
+      { id: 5, word: 'PANTAI', tag1: 'JAKARTA', tag2: '', tag3: '' },
+      { id: 6, word: 'GUNUNG', tag1: 'BANDUNG', tag2: '', tag3: '' },
+      { id: 7, word: 'P. JAWA', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
+      { id: 8, word: 'WHOOSH', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
+      { id: 9, word: 'MACET', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
+      { id: 10, word: 'GAUL', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
+    ];
+
+    setStartingTiles(defaultStartingTiles);
+    setReserveTiles(defaultReserveTiles);
+    setNextId(11);
+  };
+
   const handleAddStartingTileRow = () => {
     if (startingTiles.length < 4) {
       setStartingTiles([
@@ -102,7 +124,10 @@ const Setup = () => {
       <div className="w-full max-w-6xl">
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-4xl font-bold">Game Setup</h1>
-            <Button variant="outline" onClick={() => navigate('/')}>Back to Home</Button>
+            <div className="flex space-x-2">
+                <Button variant="secondary" onClick={handleDefaultSetup}>Default Setup</Button>
+                <Button variant="outline" onClick={() => navigate('/')}>Back to Home</Button>
+            </div>
         </div>
 
         <div className="space-y-12">
