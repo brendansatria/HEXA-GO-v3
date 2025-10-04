@@ -125,8 +125,8 @@ const Setup = () => {
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-4xl font-bold">Game Setup</h1>
             <div className="flex space-x-2">
-                <Button variant="secondary" onClick={handleDefaultSetup}>Default Setup</Button>
-                <Button variant="outline" onClick={() => navigate('/')}>Back to Home</Button>
+                <Button variant="secondary" onClick={handleDefaultSetup} className="hover:bg-[#EBE5DD]">Default Setup</Button>
+                <Button variant="outline" onClick={() => navigate('/')} className="hover:bg-[#EBE5DD]">Back to Home</Button>
             </div>
         </div>
 
@@ -137,7 +137,7 @@ const Setup = () => {
             <div className="border rounded-lg">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="hover:bg-transparent">
                     <TableHead className="w-[50px]">No.</TableHead>
                     <TableHead>Tile's Word</TableHead>
                     <TableHead>Tag 1</TableHead>
@@ -148,7 +148,7 @@ const Setup = () => {
                 </TableHeader>
                 <TableBody>
                   {startingTiles.map((row, index) => (
-                    <TableRow key={row.id}>
+                    <TableRow key={row.id} className="hover:bg-[#EBE5DD]">
                       <TableCell className="font-medium">{index + 1}</TableCell>
                       <TableCell>
                         <Input
@@ -184,6 +184,7 @@ const Setup = () => {
                           size="icon"
                           onClick={() => handleDeleteStartingTileRow(row.id)}
                           disabled={startingTiles.length <= 1}
+                          className="hover:bg-[#EBE5DD]"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -194,7 +195,7 @@ const Setup = () => {
               </Table>
             </div>
             <div className="mt-4">
-                <Button variant="outline" onClick={handleAddStartingTileRow} disabled={startingTiles.length >= 4}>
+                <Button variant="outline" onClick={handleAddStartingTileRow} disabled={startingTiles.length >= 4} className="hover:bg-[#EBE5DD]">
                     <PlusCircle className="h-4 w-4 mr-2" />
                     Add Row ({startingTiles.length}/4)
                 </Button>
@@ -207,7 +208,7 @@ const Setup = () => {
             <div className="border rounded-lg">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="hover:bg-transparent">
                     <TableHead className="w-[50px]">No.</TableHead>
                     <TableHead>Tile's Word</TableHead>
                     <TableHead>Tag 1</TableHead>
@@ -218,7 +219,7 @@ const Setup = () => {
                 </TableHeader>
                 <TableBody>
                   {reserveTiles.map((row, index) => (
-                    <TableRow key={row.id}>
+                    <TableRow key={row.id} className="hover:bg-[#EBE5DD]">
                       <TableCell className="font-medium">{index + 1}</TableCell>
                       <TableCell>
                         <Input
@@ -254,6 +255,7 @@ const Setup = () => {
                           size="icon"
                           onClick={() => handleDeleteReserveTileRow(row.id)}
                           disabled={reserveTiles.length <= 1}
+                          className="hover:bg-[#EBE5DD]"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -264,7 +266,7 @@ const Setup = () => {
               </Table>
             </div>
             <div className="mt-4">
-                <Button variant="outline" onClick={handleAddReserveTileRow} disabled={reserveTiles.length >= 40}>
+                <Button variant="outline" onClick={handleAddReserveTileRow} disabled={reserveTiles.length >= 40} className="hover:bg-[#EBE5DD]">
                     <PlusCircle className="h-4 w-4 mr-2" />
                     Add Row ({reserveTiles.length}/40)
                 </Button>
