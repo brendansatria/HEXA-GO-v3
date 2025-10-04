@@ -276,7 +276,7 @@ const Setup = () => {
       </div>
 
       <div className="w-full max-w-6xl mt-8 flex flex-col items-center">
-        <Button size="lg" onClick={handleSaveAndPlay} disabled={isSaveDisabled}>Save & Play</Button>
+        <Button size="lg" onClick={handleSaveAndPlay} disabled={isSaveDisabled} className="bg-[#3C435D] hover:bg-[#32374a]">Save & Play</Button>
         {isSaveDisabled && (
             <p className="text-sm text-red-500 mt-2 text-center">
                 A minimum of 2 starting tiles and 8 reserve tiles are required.<br/>
