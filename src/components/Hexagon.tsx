@@ -9,8 +9,14 @@ interface HexagonProps {
 }
 
 const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word }) => {
-  const width = Math.sqrt(3) * sideLength;
-  const height = 2 * sideLength;
+  const svgWidth = Math.sqrt(3) * sideLength;
+  const svgHeight = 2 * sideLength;
+  const strokeWidth = 3;
+  const padding = strokeWidth / 2;
+
+  // Adjust the side length for the path to account for the stroke width,
+  // ensuring the entire stroke is visible within the SVG container.
+  const pathSideLength = (svgWidth - strokeWidth) / Math.sqrt(3);
 
   const getRoundedPath = (s: number, inset: number) => {
     const w = Math.sqrt(3) * s;
@@ -53,36 +59,41 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
     ].join(' ');
   };
 
-  const cornerInset = sideLength * 0.2; // 20% of side length for rounding
-  const pathData = getRoundedPath(sideLength, cornerInset);
+  const cornerInset = pathSideLength * 0.2; // 20% of side length for rounding
+  const pathData = getRoundedPath(pathSideLength, cornerInset);
+
+  const pathWidth = Math.sqrt(3) * pathSideLength;
+  const pathHeight = 2 * pathSideLength;
 
   return (
     <svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
+      width={svgWidth}
+      height={svgHeight}
+      viewBox={`0 0 ${svgWidth} ${svgHeight}`}
       xmlns="http://www.w3.org/2000/svg"
       onClick={onClick}
       className="cursor-pointer"
     >
-      <path
-        d={pathData}
-        className={cn("fill-current stroke-[#f1f1f1]", className)}
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
-      {word && (
-        <text
-          x="50%"
-          y="50%"
-          dominantBaseline="middle"
-          textAnchor="middle"
-          className="fill-current text-white font-bold"
-          style={{ fontSize: `${sideLength / 4}px` }}
-        >
-          {word}
-        </text>
-      )}
+      <g transform={`translate(${padding}, ${padding})`}>
+        <path
+          d={pathData}
+          className={cn("fill-current stroke-[#f1f1f1]", className)}
+          strokeWidth={strokeWidth}
+          strokeLinejoin="round"
+        />
+        {word && (
+          <text
+            x={pathWidth / 2}
+            y={pathHeight / 2}
+            dominantBaseline="middle"
+            textAnchor="middle"
+            className="fill-current text-white font-bold"
+            style={{ fontSize: `${sideLength / 4}px` }}
+          >
+            {word}
+          </text>
+        )}
+      </g>
     </svg>
   );
 };
