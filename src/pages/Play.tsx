@@ -66,7 +66,7 @@ const Play = () => {
 
     let startingPositions: string[];
     if (startingTiles.length === 2) {
-      startingPositions = ['2-1', '2-4'];
+      startingPositions = ['2-1', '3-4'];
       setIsTwoPlayerSetup(true);
       setIsThreePlayerSetup(false);
     } else if (startingTiles.length === 3) {
