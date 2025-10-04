@@ -67,7 +67,7 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
     >
       <path
         d={pathData}
-        className={cn("fill-current stroke-white", className)}
+        className={cn("fill-current stroke-[#f1f1f1]", className)}
         strokeWidth="3"
         strokeLinejoin="round"
       />
