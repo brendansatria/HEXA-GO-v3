@@ -120,7 +120,7 @@ const Setup = () => {
   const isSaveDisabled = validStartingTilesCount < 2 || validReserveTilesCount < 8;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between bg-white dark:bg-gray-950 p-4 md:p-8">
+    <div className="min-h-screen flex flex-col items-center justify-between p-4 md:p-8">
       <div className="w-full max-w-6xl">
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-4xl font-bold">Game Setup</h1>

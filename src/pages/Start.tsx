@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 
 const Start = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-950">
+    <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <img src="/hexago_logo.png" alt="Hexa Go! Logo" className="mb-12 w-full max-w-2xl" />
         <div className="flex space-x-6">

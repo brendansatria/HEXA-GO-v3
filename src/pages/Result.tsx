@@ -17,7 +17,7 @@ const Result = () => {
 
   if (scores.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col items-center justify-center">
         <h1 className="text-2xl mb-4">No game data found.</h1>
         <Link to="/">
           <Button>Go to Home</Button>
@@ -38,7 +38,7 @@ const Result = () => {
   const uniqueTags = Array.from(allTags).sort();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold">Game Over!</CardTitle>

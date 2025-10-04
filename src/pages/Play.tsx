@@ -205,7 +205,7 @@ const Play = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <CustomDragLayer />
-      <div className="min-h-screen w-full flex bg-white dark:bg-gray-950">
+      <div className="min-h-screen w-full flex">
         {/* Left Sidebar */}
         <div className="w-80 shrink-0 p-4 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center space-y-6 bg-gray-50 dark:bg-gray-900">
           <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
