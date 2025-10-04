@@ -62,6 +62,10 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        team1: '#F5734F',
+        team2: '#996F99',
+        team3: '#316283',
+        team4: '#3C435D',
       },
       borderRadius: {
         lg: "var(--radius)",
