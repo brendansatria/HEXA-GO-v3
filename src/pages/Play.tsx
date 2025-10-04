@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HexagonalBoard, { HexagonState } from "@/components/HexagonalBoard";
 import TileSidebar from "@/components/TileSidebar";
 import TurnIndicator from "@/components/TurnIndicator";
+import HowToPlayDialog from "@/components/HowToPlayDialog";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomDragLayer from "@/components/CustomDragLayer";
@@ -188,12 +189,19 @@ const Play = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <CustomDragLayer />
-      <div className="min-h-screen w-full flex flex-row bg-white dark:bg-gray-950">
-        <main className="flex-1 flex flex-col items-center justify-center p-4 overflow-auto">
+      <div className="min-h-screen w-full flex flex-col bg-white dark:bg-gray-950">
+        <header className="p-4 border-b dark:border-gray-800 relative">
           <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
-          <HexagonalBoard rows={6} cols={6} hexagonSize={60} boardState={boardState} onDrop={handleDrop} />
-        </main>
-        <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} feedback={lastMoveFeedback} />
+          <div className="absolute top-1/2 right-4 -translate-y-1/2">
+            <HowToPlayDialog />
+          </div>
+        </header>
+        <div className="flex flex-1 overflow-hidden">
+          <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} feedback={lastMoveFeedback} />
+          <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
+            <HexagonalBoard rows={6} cols={6} hexagonSize={60} boardState={boardState} onDrop={handleDrop} />
+          </main>
+        </div>
       </div>
     </DndProvider>
   );

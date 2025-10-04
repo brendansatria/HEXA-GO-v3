@@ -1,7 +1,6 @@
 import React from 'react';
 import DraggableHexagon from './DraggableHexagon';
 import { Tile } from '@/context/GameContext';
-import HowToPlayDialog from './HowToPlayDialog';
 
 interface TileSidebarProps {
   currentPlayerColor: string;
@@ -11,7 +10,7 @@ interface TileSidebarProps {
 
 const TileSidebar: React.FC<TileSidebarProps> = ({ currentPlayerColor, hand, feedback }) => {
   return (
-    <div className="p-4 border-l border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50 dark:bg-gray-900 w-72 shrink-0">
+    <div className="p-4 border-r border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50 dark:bg-gray-900 w-72 shrink-0">
       <div className="flex-grow">
         <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4 text-center">Your Tiles</h2>
         <div className="grid grid-cols-2 gap-4 place-items-center">
@@ -45,10 +44,6 @@ const TileSidebar: React.FC<TileSidebarProps> = ({ currentPlayerColor, hand, fee
             </div>
           )}
         </div>
-      </div>
-
-      <div className="mt-auto pt-8 flex justify-center">
-        <HowToPlayDialog />
       </div>
     </div>
   );

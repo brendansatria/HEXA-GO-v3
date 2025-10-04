@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Team } from '@/lib/teams';
 
 interface Score extends Team {
@@ -13,22 +14,26 @@ interface TurnIndicatorProps {
 
 const TurnIndicator: React.FC<TurnIndicatorProps> = ({ round, currentPlayerName, scores }) => {
   return (
-    <div className="w-full max-w-4xl p-4 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
-      <h2 className="text-center text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-        Round {round}: {currentPlayerName}'s Turn
-      </h2>
-      <div className="flex justify-around items-center">
-        {scores.map((item) => (
-          <div key={item.name} className="flex flex-col items-center">
-            <div className="flex items-center mb-1">
-              <span className={`w-3 h-3 rounded-full mr-2 ${item.bgColor}`}></span>
-              <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300">{item.name}</h3>
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle className="text-center text-2xl font-bold">
+          Round {round}: {currentPlayerName}'s Turn
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          {scores.map((item) => (
+            <div key={item.name} className="p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
+              <div className="flex items-center justify-center mb-2">
+                <span className={`w-4 h-4 rounded-full mr-2 ${item.bgColor}`}></span>
+                <h3 className="text-lg font-semibold">{item.name}</h3>
+              </div>
+              <p className="text-3xl font-bold">{item.score}</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{item.score}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
