@@ -55,6 +55,7 @@ const Play = () => {
   const [placedTilesCount, setPlacedTilesCount] = useState(0);
   const [lastMoveFeedback, setLastMoveFeedback] = useState<string[]>([]);
   const [isTwoPlayerSetup, setIsTwoPlayerSetup] = useState(false);
+  const [isThreePlayerSetup, setIsThreePlayerSetup] = useState(false);
   
   const isInitialMount = useRef(true);
 
@@ -67,9 +68,15 @@ const Play = () => {
     if (startingTiles.length === 2) {
       startingPositions = ['2-1', '2-4'];
       setIsTwoPlayerSetup(true);
+      setIsThreePlayerSetup(false);
+    } else if (startingTiles.length === 3) {
+      startingPositions = ['1-1', '1-4', '4-3'];
+      setIsThreePlayerSetup(true);
+      setIsTwoPlayerSetup(false);
     } else {
       startingPositions = ['1-1', '1-4', '4-1', '4-4'];
       setIsTwoPlayerSetup(false);
+      setIsThreePlayerSetup(false);
     }
 
     const shuffledStartingTiles = shuffleArray(startingTiles);
@@ -244,7 +251,15 @@ const Play = () => {
               ))}
             </div>
             
-            <HexagonalBoard rows={6} cols={6} hexagonSize={75} boardState={boardState} onDrop={handleDrop} isTwoPlayerSetup={isTwoPlayerSetup} />
+            <HexagonalBoard 
+              rows={6} 
+              cols={6} 
+              hexagonSize={75} 
+              boardState={boardState} 
+              onDrop={handleDrop} 
+              isTwoPlayerSetup={isTwoPlayerSetup}
+              isThreePlayerSetup={isThreePlayerSetup}
+            />
           </div>
         </main>
       </div>

@@ -21,21 +21,35 @@ interface HexagonalBoardProps {
   boardState: { [key: string]: HexagonState };
   onDrop: (row: number, col: number, item: DraggableItem) => void;
   isTwoPlayerSetup?: boolean;
+  isThreePlayerSetup?: boolean;
 }
 
-const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ rows, cols, hexagonSize, boardState, onDrop, isTwoPlayerSetup = false }) => {
+const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ 
+  rows, 
+  cols, 
+  hexagonSize, 
+  boardState, 
+  onDrop, 
+  isTwoPlayerSetup = false,
+  isThreePlayerSetup = false
+}) => {
   const sideLength = hexagonSize;
   const hexWidth = Math.sqrt(3) * sideLength;
   const hexHeight = 2 * sideLength;
 
-  const excludedHexes = ['1-5', '3-5', '5-5'];
+  let excludedHexes: string[] = [];
+  if (isTwoPlayerSetup) {
+    excludedHexes = ['1-5', '3-5', '5-5'];
+  } else if (isThreePlayerSetup) {
+    excludedHexes = ['0-0', '2-0', '4-0'];
+  }
 
   const hexagons = [];
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const key = `${row}-${col}`;
 
-      if (isTwoPlayerSetup && excludedHexes.includes(key)) {
+      if (excludedHexes.includes(key)) {
         continue;
       }
 
