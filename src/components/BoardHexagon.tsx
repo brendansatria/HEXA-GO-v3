@@ -30,7 +30,7 @@ const BoardHexagon: React.FC<BoardHexagonProps> = ({ sideLength, color, word, on
     }),
   }), [isOccupied, onDrop]);
 
-  const baseColor = "text-white/10";
+  const baseColor = "text-gray-300 dark:text-gray-700";
   
   const overlayClass = isOver && canDropNow ? 'opacity-50' : 'opacity-100';
 

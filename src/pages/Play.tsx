@@ -68,7 +68,7 @@ const Play = () => {
 
     startingPositions.forEach((pos, index) => {
       if (shuffledStartingTiles[index]) {
-        initialBoardState[pos] = { color: 'text-neutral-800/70', tile: shuffledStartingTiles[index] };
+        initialBoardState[pos] = { color: 'text-gray-500', tile: shuffledStartingTiles[index] };
       }
     });
     setBoardState(initialBoardState);
