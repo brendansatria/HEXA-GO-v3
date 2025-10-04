@@ -207,7 +207,7 @@ const Play = () => {
       <CustomDragLayer />
       <div className="min-h-screen w-full flex">
         {/* Left Sidebar */}
-        <div className="w-80 shrink-0 p-4 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center space-y-6 bg-gray-50 dark:bg-gray-900">
+        <div className="w-80 shrink-0 px-4 pt-12 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-start space-y-6 bg-gray-50 dark:bg-gray-900">
           <img src="/hexago_logo.png" alt="Hexa Go! Logo" className="w-48" />
           <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
           
@@ -229,7 +229,7 @@ const Play = () => {
         </div>
 
         {/* Main Area */}
-        <main className="flex-1 flex items-center justify-center p-4 overflow-auto relative">
+        <main className="flex-1 flex justify-center p-4 pt-12 overflow-auto relative">
           <div className="absolute top-4 right-4 z-10">
             <HowToPlayDialog />
           </div>
