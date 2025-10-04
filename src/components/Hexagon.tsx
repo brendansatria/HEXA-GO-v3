@@ -29,41 +29,40 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
     // Distance from corner to arc tangent point along the edge
     const d = r / Math.tan(Math.PI / 6); // d = r / tan(30 deg)
 
-    // If the radius is too large, it will break the shape.
-    // We cap `d` at half the side length to prevent this.
-    const maxD = s / 2;
-    const effectiveD = Math.min(d, maxD);
+    // Cap `d` at half the side length to prevent issues with large radii
+    const effectiveD = Math.min(d, s / 2);
     const effectiveR = effectiveD * Math.tan(Math.PI / 6);
 
-    // Function to get a point on a line segment
+    // Helper to find a point on a line segment
     const pointOnLine = (p1: {x:number, y:number}, p2: {x:number, y:number}, dist: number) => {
       const totalDist = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
       const ratio = dist / totalDist;
-      const x = p1.x + ratio * (p2.x - p1.x);
-      const y = p1.y + ratio * (p2.y - p1.y);
-      return { x, y };
+      return { 
+        x: p1.x + ratio * (p2.x - p1.x), 
+        y: p1.y + ratio * (p2.y - p1.y) 
+      };
     };
     
-    // Calculate the start and end points for each of the 6 arcs
-    const a = [
-      pointOnLine(p[0], p[5], effectiveD), pointOnLine(p[0], p[1], effectiveD), // Corner 0
-      pointOnLine(p[1], p[0], effectiveD), pointOnLine(p[1], p[2], effectiveD), // Corner 1
-      pointOnLine(p[2], p[1], effectiveD), pointOnLine(p[2], p[3], effectiveD), // Corner 2
-      pointOnLine(p[3], p[2], effectiveD), pointOnLine(p[3], p[4], effectiveD), // Corner 3
-      pointOnLine(p[4], p[3], effectiveD), pointOnLine(p[4], p[5], effectiveD), // Corner 4
-      pointOnLine(p[5], p[4], effectiveD), pointOnLine(p[5], p[0], effectiveD), // Corner 5
-    ];
+    // Calculate tangent points for each corner's arc
+    const tangentPoints = p.map((corner, i) => {
+      const pPrev = p[(i + 5) % 6]; // Previous corner
+      const pNext = p[(i + 1) % 6]; // Next corner
+      return {
+        start: pointOnLine(corner, pPrev, effectiveD),
+        end: pointOnLine(corner, pNext, effectiveD),
+      };
+    });
 
-    // Build the path string with lines and circular arcs
-    return [
-      `M ${a[1].x},${a[1].y}`,
-      `L ${a[2].x},${a[2].y}`, `A ${effectiveR},${effectiveR} 0 0 1 ${a[3].x},${a[3].y}`,
-      `L ${a[4].x},${a[4].y}`, `A ${effectiveR},${effectiveR} 0 0 1 ${a[5].x},${a[5].y}`,
-      `L ${a[6].x},${a[6].y}`, `A ${effectiveR},${effectiveR} 0 0 1 ${a[7].x},${a[7].y}`,
-      `L ${a[8].x},${a[8].y}`, `A ${effectiveR},${effectiveR} 0 0 1 ${a[9].x},${a[9].y}`,
-      `L ${a[10].x},${a[10].y}`, `A ${effectiveR},${effectiveR} 0 0 1 ${a[11].x},${a[11].y}`,
-      `L ${a[0].x},${a[0].y}`, `A ${effectiveR},${effectiveR} 0 0 1 ${a[1].x},${a[1].y}`,
-    ].join(' ');
+    // Build the path string by connecting the tangent points with lines and arcs
+    const pathParts = tangentPoints.map((tp, i) => {
+      const line = `L ${tp.start.x},${tp.start.y}`;
+      const arc = `A ${effectiveR},${effectiveR} 0 0 1 ${tp.end.x},${tp.end.y}`;
+      return `${line} ${arc}`;
+    });
+
+    const startPoint = tangentPoints[5].end;
+    
+    return `M ${startPoint.x},${startPoint.y} ${pathParts.join(' ')}`;
   };
 
   const cornerRadius = pathSideLength * 0.15;
