@@ -205,9 +205,18 @@ const Play = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <CustomDragLayer />
-      <div className="min-h-screen w-full flex">
+      <svg className="absolute w-0 h-0">
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+            <feBlend in="SourceGraphic" in2="goo" />
+          </filter>
+        </defs>
+      </svg>
+      <div className="min-h-screen w-full flex bg-background" style={{ filter: 'url(#goo)' }}>
         {/* Left Sidebar */}
-        <div className="w-80 shrink-0 px-4 pt-12 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-start space-y-6 bg-gray-50 dark:bg-gray-900">
+        <div className="w-80 shrink-0 px-4 pt-12 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-start space-y-6 bg-gray-50 dark:bg-gray-900" style={{ filter: 'none' }}>
           <img src="/hexago_logo.png" alt="Hexa Go! Logo" className="w-48" />
           <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
           
@@ -230,12 +239,12 @@ const Play = () => {
 
         {/* Main Area */}
         <main className="flex-1 flex justify-center p-4 pt-12 overflow-auto relative">
-          <div className="absolute top-4 right-4 z-10">
+          <div className="absolute top-4 right-4 z-10" style={{ filter: 'none' }}>
             <HowToPlayDialog />
           </div>
           <div className="flex items-center justify-center gap-8">
             {/* Hand Tiles Column */}
-            <div className="relative -left-8 flex flex-col gap-4">
+            <div className="relative -left-8 flex flex-col gap-4" style={{ filter: 'none' }}>
               {hand.map((tile, index) => (
                 <div key={index} className="w-[150px] h-[150px] flex items-center justify-center">
                   {tile ? (
