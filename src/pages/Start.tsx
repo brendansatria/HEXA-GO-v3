@@ -8,7 +8,7 @@ const Start = () => {
         <img src="/hexago_logo.png" alt="Hexa Go! Logo" className="mb-12 w-full max-w-2xl" />
         <div className="flex space-x-6">
           <Link to="/setup">
-            <Button size="lg" className="px-8 py-6 text-lg">Create</Button>
+            <Button size="lg" className="px-8 py-6 text-lg bg-[#316283] hover:bg-[#27516d]">Create</Button>
           </Link>
           <Link to="/play">
             <Button size="lg" variant="secondary" className="px-8 py-6 text-lg">Instant Play</Button>
