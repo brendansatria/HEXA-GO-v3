@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import HexagonalBoard, { HexagonState } from "@/components/HexagonalBoard";
 import TileSidebar from "@/components/TileSidebar";
-import GameInfoSidebar from "@/components/GameInfoSidebar";
+import TurnIndicator from "@/components/TurnIndicator";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomDragLayer from "@/components/CustomDragLayer";
@@ -189,8 +189,8 @@ const Play = () => {
     <DndProvider backend={HTML5Backend}>
       <CustomDragLayer />
       <div className="min-h-screen w-full flex flex-row bg-white dark:bg-gray-950">
-        <GameInfoSidebar round={round} currentPlayerName={currentPlayer.name} scores={scores} />
-        <main className="flex-1 flex items-center justify-center p-4 overflow-auto">
+        <main className="flex-1 flex flex-col items-center justify-center p-4 overflow-auto">
+          <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
           <HexagonalBoard rows={6} cols={6} hexagonSize={60} boardState={boardState} onDrop={handleDrop} />
         </main>
         <TileSidebar currentPlayerColor={currentPlayer.textColor} hand={hand} feedback={lastMoveFeedback} />
