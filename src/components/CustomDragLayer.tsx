@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDragLayer, XYCoord } from 'react-dnd';
+import Hexagon from './Hexagon';
 import { ItemTypes } from '@/lib/dnd';
-import type { Tile } from '@/context/GameContext';
 
 const layerStyles: React.CSSProperties = {
   position: 'fixed',
@@ -27,16 +27,10 @@ function getItemStyles(currentOffset: XYCoord | null): React.CSSProperties {
   };
 }
 
-interface DraggedItem {
-  color: string;
-  sideLength: number;
-  tile: Tile;
-}
-
 const CustomDragLayer: React.FC = () => {
   const { itemType, isDragging, item, currentOffset } = useDragLayer(
     (monitor) => ({
-      item: monitor.getItem<DraggedItem>(),
+      item: monitor.getItem(),
       itemType: monitor.getItemType(),
       currentOffset: monitor.getSourceClientOffset(),
       isDragging: monitor.isDragging(),
@@ -47,20 +41,7 @@ const CustomDragLayer: React.FC = () => {
     switch (itemType) {
       case ItemTypes.HEXAGON:
         if (item && item.sideLength && item.color) {
-          const size = item.sideLength * 1.8;
-          const bgColor = item.color.replace('text-', 'bg-');
-          return (
-            <div
-              className={`flex items-center justify-center rounded-full text-white font-bold ${bgColor}`}
-              style={{
-                width: size,
-                height: size,
-                fontSize: `${item.sideLength / 4.5}px`,
-              }}
-            >
-              {item.tile.word}
-            </div>
-          );
+          return <Hexagon sideLength={item.sideLength} className={item.color} />;
         }
         return null;
       default:
