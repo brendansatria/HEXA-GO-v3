@@ -28,16 +28,16 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
       viewBox={`0 0 ${width} ${height}`}
       xmlns="http://www.w3.org/2000/svg"
       onClick={onClick}
-      className="cursor-pointer"
+      className="cursor-pointer filter drop-shadow-md"
     >
-      <polygon points={points} className={cn("fill-current stroke-white", className)} strokeWidth="1" />
+      <polygon points={points} className={cn("fill-current stroke-white/20", className)} strokeWidth="1.5" />
       {word && (
         <text
           x="50%"
           y="50%"
           dominantBaseline="middle"
           textAnchor="middle"
-          className="fill-current text-white font-bold"
+          className="fill-current text-white font-bold drop-shadow-sm"
           style={{ fontSize: `${sideLength / 4}px` }}
         >
           {word}
