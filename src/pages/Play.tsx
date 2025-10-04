@@ -62,7 +62,13 @@ const Play = () => {
     const gameTiles = configuredTiles.filter(tile => !tile.isStartingTile && tile.word.trim() !== '');
     setTotalGameTiles(gameTiles.length);
 
-    const startingPositions = ['1-1', '1-4', '4-1', '4-4'];
+    let startingPositions: string[];
+    if (startingTiles.length === 2) {
+      startingPositions = ['2-1', '2-4'];
+    } else {
+      startingPositions = ['1-1', '1-4', '4-1', '4-4'];
+    }
+
     const shuffledStartingTiles = shuffleArray(startingTiles);
     const initialBoardState: { [key: string]: HexagonState } = {};
 
