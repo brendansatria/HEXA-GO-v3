@@ -218,7 +218,7 @@ const Play = () => {
           </div>
           <div className="flex items-center justify-center gap-8">
             {/* Hand Tiles Column */}
-            <div className="flex flex-col gap-4">
+            <div className="relative -left-8 flex flex-col gap-4">
               {hand.map((tile, index) => (
                 <div key={index} className="w-[150px] h-[150px] flex items-center justify-center">
                   {tile ? (
