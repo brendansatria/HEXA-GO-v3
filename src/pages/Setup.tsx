@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Table,
   TableBody,
@@ -16,7 +15,6 @@ import { useGame } from '@/context/GameContext';
 
 interface TileRow {
   id: number;
-  isStartingTile: boolean;
   word: string;
   tag1: string;
   tag2: string;
@@ -24,37 +22,68 @@ interface TileRow {
 }
 
 const Setup = () => {
-  const [rows, setRows] = useState<TileRow[]>([
-    { id: 1, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
+  const [startingTiles, setStartingTiles] = useState<TileRow[]>([
+    { id: 1, word: '', tag1: '', tag2: '', tag3: '' },
   ]);
-  const [nextId, setNextId] = useState(2);
+  const [reserveTiles, setReserveTiles] = useState<TileRow[]>([
+    { id: 2, word: '', tag1: '', tag2: '', tag3: '' },
+  ]);
+  const [nextId, setNextId] = useState(3);
   const { setTiles } = useGame();
   const navigate = useNavigate();
 
-  const handleAddRow = () => {
-    setRows([
-      ...rows,
-      { id: nextId, isStartingTile: false, word: '', tag1: '', tag2: '', tag3: '' },
-    ]);
-    setNextId(nextId + 1);
-  };
-
-  const handleDeleteRow = (id: number) => {
-    if (rows.length > 1) {
-      setRows(rows.filter((row) => row.id !== id));
+  const handleAddStartingTileRow = () => {
+    if (startingTiles.length < 4) {
+      setStartingTiles([
+        ...startingTiles,
+        { id: nextId, word: '', tag1: '', tag2: '', tag3: '' },
+      ]);
+      setNextId(nextId + 1);
     }
   };
 
-  const handleInputChange = (id: number, field: keyof TileRow, value: string | boolean) => {
-    setRows(
-      rows.map((row) =>
+  const handleDeleteStartingTileRow = (id: number) => {
+    if (startingTiles.length > 1) {
+      setStartingTiles(startingTiles.filter((row) => row.id !== id));
+    }
+  };
+
+  const handleStartingTileInputChange = (id: number, field: keyof Omit<TileRow, 'id'>, value: string) => {
+    setStartingTiles(
+      startingTiles.map((row) =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
+  };
+
+  const handleAddReserveTileRow = () => {
+    if (reserveTiles.length < 40) {
+      setReserveTiles([
+        ...reserveTiles,
+        { id: nextId, word: '', tag1: '', tag2: '', tag3: '' },
+      ]);
+      setNextId(nextId + 1);
+    }
+  };
+
+  const handleDeleteReserveTileRow = (id: number) => {
+    if (reserveTiles.length > 1) {
+      setReserveTiles(reserveTiles.filter((row) => row.id !== id));
+    }
+  };
+
+  const handleReserveTileInputChange = (id: number, field: keyof Omit<TileRow, 'id'>, value: string) => {
+    setReserveTiles(
+      reserveTiles.map((row) =>
         row.id === id ? { ...row, [field]: value } : row
       )
     );
   };
 
   const handleSaveAndPlay = () => {
-    setTiles(rows);
+    const finalStartingTiles = startingTiles.map(tile => ({ ...tile, isStartingTile: true }));
+    const finalReserveTiles = reserveTiles.map(tile => ({ ...tile, isStartingTile: false }));
+    setTiles([...finalStartingTiles, ...finalReserveTiles]);
     navigate('/play');
   };
 
@@ -66,79 +95,146 @@ const Setup = () => {
             <Button variant="outline" onClick={() => navigate('/')}>Back to Home</Button>
         </div>
 
-        <div className="border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[50px]">No.</TableHead>
-                <TableHead className="w-[120px]">Starting Tile</TableHead>
-                <TableHead>Tile's Word</TableHead>
-                <TableHead>Tag 1</TableHead>
-                <TableHead>Tag 2</TableHead>
-                <TableHead>Tag 3</TableHead>
-                <TableHead className="w-[80px] text-center">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map((row, index) => (
-                <TableRow key={row.id}>
-                  <TableCell className="font-medium">{index + 1}</TableCell>
-                  <TableCell className="text-center">
-                    <Checkbox
-                      checked={row.isStartingTile}
-                      onCheckedChange={(checked) =>
-                        handleInputChange(row.id, 'isStartingTile', !!checked)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      value={row.word}
-                      onChange={(e) => handleInputChange(row.id, 'word', e.target.value)}
-                      placeholder="Enter word..."
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      value={row.tag1}
-                      onChange={(e) => handleInputChange(row.id, 'tag1', e.target.value)}
-                      placeholder="Enter tag..."
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      value={row.tag2}
-                      onChange={(e) => handleInputChange(row.id, 'tag2', e.target.value)}
-                      placeholder="Enter tag..."
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      value={row.tag3}
-                      onChange={(e) => handleInputChange(row.id, 'tag3', e.target.value)}
-                      placeholder="Enter tag..."
-                    />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteRow(row.id)}
-                      disabled={rows.length <= 1}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="mt-4">
-            <Button variant="outline" onClick={handleAddRow}>
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Add Row
-            </Button>
+        <div className="space-y-12">
+          {/* Starting Tiles Table */}
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Starting Tiles</h2>
+            <div className="border rounded-lg">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[50px]">No.</TableHead>
+                    <TableHead>Tile's Word</TableHead>
+                    <TableHead>Tag 1</TableHead>
+                    <TableHead>Tag 2</TableHead>
+                    <TableHead>Tag 3</TableHead>
+                    <TableHead className="w-[80px] text-center">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {startingTiles.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell className="font-medium">{index + 1}</TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.word}
+                          onChange={(e) => handleStartingTileInputChange(row.id, 'word', e.target.value)}
+                          placeholder="Enter word..."
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.tag1}
+                          onChange={(e) => handleStartingTileInputChange(row.id, 'tag1', e.target.value)}
+                          placeholder="Enter tag..."
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.tag2}
+                          onChange={(e) => handleStartingTileInputChange(row.id, 'tag2', e.target.value)}
+                          placeholder="Enter tag..."
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.tag3}
+                          onChange={(e) => handleStartingTileInputChange(row.id, 'tag3', e.target.value)}
+                          placeholder="Enter tag..."
+                        />
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteStartingTileRow(row.id)}
+                          disabled={startingTiles.length <= 1}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            <div className="mt-4">
+                <Button variant="outline" onClick={handleAddStartingTileRow} disabled={startingTiles.length >= 4}>
+                    <PlusCircle className="h-4 w-4 mr-2" />
+                    Add Row ({startingTiles.length}/4)
+                </Button>
+            </div>
+          </div>
+
+          {/* Reserve Tiles Table */}
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Reserve Tiles</h2>
+            <div className="border rounded-lg">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[50px]">No.</TableHead>
+                    <TableHead>Tile's Word</TableHead>
+                    <TableHead>Tag 1</TableHead>
+                    <TableHead>Tag 2</TableHead>
+                    <TableHead>Tag 3</TableHead>
+                    <TableHead className="w-[80px] text-center">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {reserveTiles.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell className="font-medium">{index + 1}</TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.word}
+                          onChange={(e) => handleReserveTileInputChange(row.id, 'word', e.target.value)}
+                          placeholder="Enter word..."
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.tag1}
+                          onChange={(e) => handleReserveTileInputChange(row.id, 'tag1', e.target.value)}
+                          placeholder="Enter tag..."
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.tag2}
+                          onChange={(e) => handleReserveTileInputChange(row.id, 'tag2', e.target.value)}
+                          placeholder="Enter tag..."
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          value={row.tag3}
+                          onChange={(e) => handleReserveTileInputChange(row.id, 'tag3', e.target.value)}
+                          placeholder="Enter tag..."
+                        />
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteReserveTileRow(row.id)}
+                          disabled={reserveTiles.length <= 1}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            <div className="mt-4">
+                <Button variant="outline" onClick={handleAddReserveTileRow} disabled={reserveTiles.length >= 40}>
+                    <PlusCircle className="h-4 w-4 mr-2" />
+                    Add Row ({reserveTiles.length}/40)
+                </Button>
+            </div>
+          </div>
         </div>
       </div>
 
