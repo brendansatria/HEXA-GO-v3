@@ -59,7 +59,7 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
     ].join(' ');
   };
 
-  const cornerInset = pathSideLength * 0.2; // 20% of side length for rounding
+  const cornerInset = pathSideLength * 0.15; // 15% of side length for rounding
   const pathData = getRoundedPath(pathSideLength, cornerInset);
 
   const pathWidth = Math.sqrt(3) * pathSideLength;
