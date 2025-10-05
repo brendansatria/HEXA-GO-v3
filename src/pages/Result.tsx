@@ -1,4 +1,4 @@
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,17 +11,25 @@ interface Score extends Team {
 }
 
 const Result = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const scores: Score[] = location.state?.scores || [];
   const tiles: Tile[] = location.state?.tiles || [];
+
+  const handlePlayAgain = () => {
+    if (tiles && tiles.length > 0) {
+      localStorage.setItem('lastGameTiles', JSON.stringify(tiles));
+    }
+    navigate('/');
+  };
 
   if (scores.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
         <h1 className="text-2xl mb-4">No game data found.</h1>
-        <Link to="/">
+        <a href="/">
           <Button>Go to Home</Button>
-        </Link>
+        </a>
       </div>
     );
   }
@@ -76,9 +84,9 @@ const Result = () => {
           </CardFooter>
         )}
       </Card>
-      <Link to="/" className="mt-8">
-        <Button size="lg">Play Again</Button>
-      </Link>
+      <Button size="lg" onClick={handlePlayAgain} className="mt-8">
+        Play Again
+      </Button>
     </div>
   );
 };
