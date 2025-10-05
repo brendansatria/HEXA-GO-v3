@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { Button } from '@/components/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy } from 'lucide-react';
 import { Team } from '@/lib/teams';
 import { Tile } from '@/context/GameContext';
+import ResultMusic from '@/assets/result_music.wav';
 
 interface Score extends Team {
   score: number;
@@ -15,6 +17,16 @@ const Result = () => {
   const location = useLocation();
   const scores: Score[] = location.state?.scores || [];
   const tiles: Tile[] = location.state?.tiles || [];
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+      audioRef.current.play().catch(error => {
+        console.log("Audio autoplay was prevented: ", error);
+      });
+    }
+  }, []);
 
   const handlePlayAgain = () => {
     if (tiles && tiles.length > 0) {
@@ -47,6 +59,7 @@ const Result = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <audio ref={audioRef} src={ResultMusic} />
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold">Game Over!</CardTitle>
