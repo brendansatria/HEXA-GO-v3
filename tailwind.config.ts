@@ -97,8 +97,8 @@ export default {
         },
         "pulse-dark": {
           "0%": { backgroundColor: "#1f2937" },
-          "45%": { backgroundColor: "#4b5563" },
-          "52%": { backgroundColor: "#4b5563" },
+          "45%": { backgroundColor: "#6b7280" },
+          "52%": { backgroundColor: "#6b7280" },
           "100%": { backgroundColor: "#1f2937" },
         },
       },
