@@ -89,10 +89,20 @@ export default {
             height: "0",
           },
         },
+        "pulse-light": {
+          "0%, 100%": { backgroundColor: "#f3f4f6" },
+          "50%": { backgroundColor: "#ffffff" },
+        },
+        "pulse-dark": {
+          "0%, 100%": { backgroundColor: "#1f2937" },
+          "50%": { backgroundColor: "#374151" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-light": "pulse-light 2s ease-in-out infinite",
+        "pulse-dark": "pulse-dark 2s ease-in-out infinite",
       },
     },
   },
