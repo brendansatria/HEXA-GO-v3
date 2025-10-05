@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import VolumeControl from "@/components/VolumeControl";
 import GameMusic from '@/assets/Fast_Jazz_30.mp3';
+import DropSound from '@/assets/MusicEffectJazzTr SDT055702.wav';
 
 interface DraggableItem {
   color: string;
@@ -76,6 +77,7 @@ const Play = () => {
   
   const isInitialMount = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const sfxRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -171,6 +173,12 @@ const Play = () => {
   };
 
   const handleDrop = (row: number, col: number, item: DraggableItem) => {
+    if (sfxRef.current) {
+      sfxRef.current.volume = 0.8;
+      sfxRef.current.currentTime = 0;
+      sfxRef.current.play();
+    }
+
     const key = `${row}-${col}`;
     const points = calculateScore(row, col, item.tile, boardState);
 
@@ -232,6 +240,7 @@ const Play = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <audio ref={audioRef} src={GameMusic} loop />
+      <audio ref={sfxRef} src={DropSound} />
       <CustomDragLayer />
       <div className="min-h-screen w-full flex">
         {/* Left Sidebar */}
