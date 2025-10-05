@@ -90,10 +90,10 @@ export default {
           },
         },
         "pulse-turn-indicator": {
-          "0%, 100%": {
+          "0%, 49.9%": {
             backgroundColor: "hsl(var(--turn-indicator-pulse-from))",
           },
-          "50%": {
+          "50%, 100%": {
             backgroundColor: "hsl(var(--turn-indicator-pulse-to))",
           },
         },
@@ -101,7 +101,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse-turn-indicator": "pulse-turn-indicator 3s ease-in-out infinite",
+        "pulse-turn-indicator": "pulse-turn-indicator 2s steps(1, end) infinite",
       },
     },
   },
