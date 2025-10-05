@@ -39,7 +39,7 @@ const Setup = () => {
     ];
 
     const defaultReserveTiles: TileRow[] = [
-      { id: 3, word: 'GADO-GADO', tag1: 'JAKARTA', tag2: 'KULINER', tag3: '' },
+      { id: 3, word: 'KERAK TELOR', tag1: 'JAKARTA', tag2: 'KULINER', tag3: '' },
       { id: 4, word: 'GARUDA WISNU KENCANA', tag1: 'BALI', tag2: 'BANGUNAN', tag3: '' },
       { id: 5, word: 'ANGKLUNG', tag1: 'BANDUNG', tag2: 'KERAJINAN', tag3: '' },
       { id: 6, word: 'MALIOBORO', tag1: 'JOGJA', tag2: 'TEMPAT', tag3: '' },
