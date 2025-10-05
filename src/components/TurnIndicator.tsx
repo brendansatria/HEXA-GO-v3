@@ -29,7 +29,7 @@ const TurnIndicator: React.FC<TurnIndicatorProps> = ({ round, currentPlayerName,
               <div 
                 key={item.name} 
                 className={cn(
-                  "p-2 rounded-lg bg-gray-100 dark:bg-gray-800",
+                  "p-2 rounded-lg bg-gray-100",
                   isCurrentTurn && "animate-pulse-light dark:animate-pulse-dark"
                 )}
               >

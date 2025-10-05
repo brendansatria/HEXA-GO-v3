@@ -97,10 +97,10 @@ export default {
         },
         "pulse-dark": {
           "0%, 100%": {
-            backgroundColor: "red",
+            backgroundColor: "#1f2937",
           },
           "50%": {
-            backgroundColor: "blue",
+            backgroundColor: "#374151",
           },
         },
       },
