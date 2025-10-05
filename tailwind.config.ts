@@ -101,8 +101,8 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse-light": "pulse-light 8s ease-in-out infinite",
-        "pulse-dark": "pulse-dark 8s ease-in-out infinite",
+        "pulse-light": "pulse-light 20s ease-in-out infinite",
+        "pulse-dark": "pulse-dark 20s ease-in-out infinite",
       },
     },
   },
