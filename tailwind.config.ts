@@ -90,7 +90,7 @@ export default {
           },
         },
         "switch-colors": {
-          "0%, 49.9%": { backgroundColor: "#808080" },
+          "0%, 49.9%": { backgroundColor: "#A8B6BF" },
           "50%, 100%": { backgroundColor: "#E7E8EC" },
         },
       },
