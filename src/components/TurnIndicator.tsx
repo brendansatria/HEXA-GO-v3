@@ -31,7 +31,7 @@ const TurnIndicator: React.FC<TurnIndicatorProps> = ({ round, currentPlayerName,
                 className={cn(
                   "p-2 rounded-lg",
                   isCurrentTurn 
-                    ? "animate-pulse-turn-indicator" 
+                    ? "animate-switch-colors" 
                     : "bg-gray-100 dark:bg-gray-800"
                 )}
               >
