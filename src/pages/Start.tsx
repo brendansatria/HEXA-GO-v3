@@ -11,7 +11,7 @@ const Start = () => {
             <Button size="lg" className="px-8 py-6 text-lg bg-[#3C435D] hover:bg-[#32374a]">Create</Button>
           </Link>
           <Link to="/play">
-            <Button size="lg" className="px-8 py-6 text-lg bg-[#E4DACE] hover:bg-[#D3C9B9] text-gray-800">Instant Play</Button>
+            <Button size="lg" className="px-8 py-6 text-lg bg-[#E4DACE] hover:bg-[#D3C9B9] text-white">Instant Play</Button>
           </Link>
         </div>
       </div>
