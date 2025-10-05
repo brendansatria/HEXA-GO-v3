@@ -96,10 +96,10 @@ export default {
           "100%": { backgroundColor: "#e5e7eb" },
         },
         "pulse-dark": {
-          "0%": { backgroundColor: "#4D4D4D" },
+          "0%": { backgroundColor: "#000000" },
           "45%": { backgroundColor: "#999999" },
           "52%": { backgroundColor: "#999999" },
-          "100%": { backgroundColor: "#4D4D4D" },
+          "100%": { backgroundColor: "#000000" },
         },
       },
       animation: {
