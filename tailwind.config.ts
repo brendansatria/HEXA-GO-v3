@@ -90,12 +90,14 @@ export default {
           },
         },
         "pulse-light": {
-          "0%, 100%": { backgroundColor: "#e5e7eb" },
-          "50%": { backgroundColor: "#ffffff" },
+          "0%, 30%": { backgroundColor: "#e5e7eb" },
+          "50%, 80%": { backgroundColor: "#ffffff" },
+          "100%": { backgroundColor: "#e5e7eb" },
         },
         "pulse-dark": {
-          "0%, 100%": { backgroundColor: "#111827" },
-          "50%": { backgroundColor: "#374151" },
+          "0%, 30%": { backgroundColor: "#1f2937" },
+          "50%, 80%": { backgroundColor: "#374151" },
+          "100%": { backgroundColor: "#1f2937" },
         },
       },
       animation: {
