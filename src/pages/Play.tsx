@@ -132,14 +132,53 @@ const Play = () => {
       return;
     }
 
+    // Smart Draw Logic: Prioritize drawing tiles that have at least one matching tag with tiles on the board.
+    const boardTags = new Set<string>();
+    Object.values(boardState).forEach(hexState => {
+      if (hexState.tile) {
+        const { tag1, tag2, tag3 } = hexState.tile;
+        if (tag1 && tag1.trim() !== '') boardTags.add(tag1.trim());
+        if (tag2 && tag2.trim() !== '') boardTags.add(tag2.trim());
+        if (tag3 && tag3.trim() !== '') boardTags.add(tag3.trim());
+      }
+    });
+
+    const isTilePlayable = (tile: Tile): boolean => {
+      // If there are no tags on the board yet, any tile is considered playable.
+      if (boardTags.size === 0) return true;
+      
+      const tileTags = [tile.tag1, tile.tag2, tile.tag3].filter(tag => tag && tag.trim() !== '');
+      
+      // A tile with no tags cannot match anything.
+      if (tileTags.length === 0) return false;
+
+      // Check if any of the tile's tags are present on the board.
+      return tileTags.some(tag => boardTags.has(tag));
+    };
+
     let newDeck = [...deck];
     const newHand = [...hand];
     let handChanged = false;
 
     for (let i = 0; i < newHand.length; i++) {
       if (newHand[i] === null && newDeck.length > 0) {
-        newHand[i] = newDeck.shift()!;
-        handChanged = true;
+        let drawnTile: Tile | null = null;
+        
+        // Find the index of the first playable tile in the deck.
+        const playableTileIndex = newDeck.findIndex(tile => isTilePlayable(tile));
+
+        if (playableTileIndex !== -1) {
+          // If a playable tile is found, draw it.
+          drawnTile = newDeck.splice(playableTileIndex, 1)[0];
+        } else {
+          // Fallback: If no playable tile is found, draw the top tile from the deck.
+          drawnTile = newDeck.shift()!;
+        }
+        
+        if (drawnTile) {
+            newHand[i] = drawnTile;
+            handChanged = true;
+        }
       }
     }
 
@@ -147,7 +186,7 @@ const Play = () => {
       setHand(newHand);
       setDeck(newDeck);
     }
-  }, [turn, round]);
+  }, [turn, round, boardState, deck, hand]);
 
   const startingPlayerIndex = (round - 1) % TEAMS.length;
   const currentPlayerIndex = (startingPlayerIndex + turn) % TEAMS.length;
