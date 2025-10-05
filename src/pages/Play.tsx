@@ -7,14 +7,27 @@ import DraggableHexagon from "@/components/DraggableHexagon";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomDragLayer from "@/components/CustomDragLayer";
-import { TEAMS } from "@/lib/teams";
+import { TEAMS, Team } from "@/lib/teams";
 import { useGame, Tile } from "@/context/GameContext";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface DraggableItem {
   color: string;
   sideLength: number;
   tile: Tile;
   handIndex: number;
+}
+
+interface Score extends Team {
+  score: number;
 }
 
 const shuffleArray = (array: any[]) => {
@@ -48,7 +61,7 @@ const Play = () => {
   const [round, setRound] = useState(1);
   const [turn, setTurn] = useState(0);
   const [boardState, setBoardState] = useState<{ [key: string]: HexagonState }>({});
-  const [scores, setScores] = useState(TEAMS.map(team => ({ ...team, score: 0 })));
+  const [scores, setScores] = useState<Score[]>(TEAMS.map(team => ({ ...team, score: 0 })));
   const [deck, setDeck] = useState<Tile[]>([]);
   const [hand, setHand] = useState<(Tile | null)[]>(Array(4).fill(null));
   const [totalGameTiles, setTotalGameTiles] = useState(0);
@@ -56,6 +69,8 @@ const Play = () => {
   const [lastMoveFeedback, setLastMoveFeedback] = useState<string[]>([]);
   const [isTwoPlayerSetup, setIsTwoPlayerSetup] = useState(false);
   const [isThreePlayerSetup, setIsThreePlayerSetup] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [finalScores, setFinalScores] = useState<Score[]>([]);
   
   const isInitialMount = useRef(true);
 
@@ -177,19 +192,20 @@ const Play = () => {
       return newHand;
     });
 
-    let finalScores = scores;
+    let updatedScores = scores;
     if (points > 0) {
-      finalScores = scores.map((teamScore, index) => 
+      updatedScores = scores.map((teamScore, index) => 
         index === currentPlayerIndex ? { ...teamScore, score: teamScore.score + points } : teamScore
       );
-      setScores(finalScores);
+      setScores(updatedScores);
     }
 
     const newPlacedCount = placedTilesCount + 1;
     setPlacedTilesCount(newPlacedCount);
 
     if (totalGameTiles > 0 && newPlacedCount >= totalGameTiles) {
-      navigate('/result', { state: { scores: finalScores, tiles: configuredTiles } });
+      setFinalScores(updatedScores);
+      setIsGameOver(true);
       return;
     }
 
@@ -264,6 +280,21 @@ const Play = () => {
           </div>
         </main>
       </div>
+      <AlertDialog open={isGameOver}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Game End</AlertDialogTitle>
+            <AlertDialogDescription>
+              The last tile has been placed. The game is now over.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => navigate('/result', { state: { scores: finalScores, tiles: configuredTiles } })}>
+              View Results
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DndProvider>
   );
 };
