@@ -34,24 +34,28 @@ const Setup = () => {
 
   const handleDefaultSetup = () => {
     const defaultStartingTiles: TileRow[] = [
-      { id: 1, word: 'JAKARTA', tag1: 'JAKARTA', tag2: '', tag3: '' },
-      { id: 2, word: 'BANDUNG', tag1: 'BANDUNG', tag2: '', tag3: '' },
+      { id: 1, word: 'BATAGOR', tag1: 'BANDUNG', tag2: 'KULINER', tag3: '' },
+      { id: 2, word: 'KOTA TUA', tag1: 'JAKARTA', tag2: 'TEMPAT', tag3: '' },
     ];
 
     const defaultReserveTiles: TileRow[] = [
-      { id: 3, word: 'BETAWI', tag1: 'JAKARTA', tag2: '', tag3: '' },
-      { id: 4, word: 'SUNDA', tag1: 'BANDUNG', tag2: '', tag3: '' },
-      { id: 5, word: 'PANTAI', tag1: 'JAKARTA', tag2: '', tag3: '' },
-      { id: 6, word: 'GUNUNG', tag1: 'BANDUNG', tag2: '', tag3: '' },
-      { id: 7, word: 'P. JAWA', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
-      { id: 8, word: 'WHOOSH', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
-      { id: 9, word: 'MACET', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
-      { id: 10, word: 'GAUL', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
+      { id: 3, word: 'GADO-GADO', tag1: 'JAKARTA', tag2: 'KULINER', tag3: '' },
+      { id: 4, word: 'GARUDA WISNU KENCANA', tag1: 'BALI', tag2: 'BANGUNAN', tag3: '' },
+      { id: 5, word: 'ANGKLUNG', tag1: 'BANDUNG', tag2: 'KERAJINAN', tag3: '' },
+      { id: 6, word: 'MALIOBORO', tag1: 'JOGJA', tag2: 'TEMPAT', tag3: '' },
+      { id: 7, word: 'MONAS', tag1: 'JAKARTA', tag2: 'BANGUNAN', tag3: '' },
+      { id: 8, word: 'SATE LILIT', tag1: 'BALI', tag2: 'KULINER', tag3: '' },
+      { id: 9, word: 'KAWAH PUTIH', tag1: 'BANDUNG', tag2: 'TEMPAT', tag3: '' },
+      { id: 10, word: 'BATIK', tag1: 'JOGJA', tag2: 'KERAJINAN', tag3: '' },
+      { id: 11, word: 'SONGKET', tag1: 'BALI', tag2: 'KERAJINAN', tag3: '' },
+      { id: 12, word: 'KERATON', tag1: 'JOGJA', tag2: 'BANGUNAN', tag3: '' },
+      { id: 13, word: 'WHOOSH', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '' },
+      { id: 14, word: 'PAWAI ADAT', tag1: 'JOGJA', tag2: 'BALI', tag3: '' },
     ];
 
     setStartingTiles(defaultStartingTiles);
     setReserveTiles(defaultReserveTiles);
-    setNextId(11);
+    setNextId(15);
   };
 
   const handleAddStartingTileRow = () => {

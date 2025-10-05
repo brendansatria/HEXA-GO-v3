@@ -65,6 +65,37 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
   const pathWidth = Math.sqrt(3) * pathSideLength;
   const pathHeight = 2 * pathSideLength;
 
+  const renderWord = () => {
+    if (!word) return null;
+
+    const lines = word.split(' ');
+    const totalLines = lines.length;
+    const fontSize = sideLength / 4;
+    const lineHeight = fontSize * 1.1;
+    const startY = (pathHeight / 2) - ((totalLines - 1) * lineHeight / 2);
+
+    return (
+      <text
+        x={pathWidth / 2}
+        y={startY}
+        dominantBaseline="middle"
+        textAnchor="middle"
+        className="fill-current text-white font-bold"
+        style={{ fontSize: `${fontSize}px` }}
+      >
+        {lines.map((line, index) => (
+          <tspan
+            key={index}
+            x={pathWidth / 2}
+            dy={index === 0 ? 0 : `${lineHeight}px`}
+          >
+            {line}
+          </tspan>
+        ))}
+      </text>
+    );
+  };
+
   return (
     <svg
       width={svgWidth}
@@ -81,18 +112,7 @@ const Hexagon: React.FC<HexagonProps> = ({ sideLength, className, onClick, word 
           strokeWidth={strokeWidth}
           strokeLinejoin="round"
         />
-        {word && (
-          <text
-            x={pathWidth / 2}
-            y={pathHeight / 2}
-            dominantBaseline="middle"
-            textAnchor="middle"
-            className="fill-current text-white font-bold"
-            style={{ fontSize: `${sideLength / 4}px` }}
-          >
-            {word}
-          </text>
-        )}
+        {renderWord()}
       </g>
     </svg>
   );
