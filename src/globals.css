@@ -49,6 +49,9 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --turn-indicator-pulse-from: 220 13% 91%; /* gray-200 */
+    --turn-indicator-pulse-to: 0 0% 100%; /* white */
   }
 
   .dark {
@@ -87,6 +90,9 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --turn-indicator-pulse-from: 0 0% 0%; /* black */
+    --turn-indicator-pulse-to: 0 0% 50%; /* grey */
   }
 }
 

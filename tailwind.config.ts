@@ -89,26 +89,19 @@ export default {
             height: "0",
           },
         },
-        "pulse-light": {
-          "0%": { backgroundColor: "#e5e7eb" },
-          "45%": { backgroundColor: "#ffffff" },
-          "52%": { backgroundColor: "#ffffff" },
-          "100%": { backgroundColor: "#e5e7eb" },
-        },
-        "pulse-dark": {
+        "pulse-turn-indicator": {
           "0%, 100%": {
-            backgroundColor: "#1f2937",
+            backgroundColor: "hsl(var(--turn-indicator-pulse-from))",
           },
           "50%": {
-            backgroundColor: "#374151",
+            backgroundColor: "hsl(var(--turn-indicator-pulse-to))",
           },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse-light": "pulse-light 3s ease-in-out infinite",
-        "pulse-dark": "pulse-dark 3s ease-in-out infinite",
+        "pulse-turn-indicator": "pulse-turn-indicator 3s ease-in-out infinite",
       },
     },
   },
