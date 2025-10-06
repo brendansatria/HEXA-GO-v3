@@ -5,7 +5,7 @@ import { useGame, Tile } from '@/context/GameContext';
 import logopart1 from '@/assets/logopart_1.png';
 import logopart2 from '@/assets/logopart_2.png';
 import logopart3 from '@/assets/logopart_3.png';
-import designByImage from '@/assets/logogogo bg hitam.png';
+import designByImage from '@/assets/design-by-logo.png';
 
 const Start = () => {
   const navigate = useNavigate();
