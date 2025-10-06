@@ -1,12 +1,19 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy } from 'lucide-react';
+import { Trophy, FileText } from 'lucide-react';
 import { Team } from '@/lib/teams';
 import { Tile } from '@/context/GameContext';
 import ResultMusic from '@/assets/result_music.wav';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Score extends Team {
   score: number;
@@ -17,7 +24,9 @@ const Result = () => {
   const location = useLocation();
   const scores: Score[] = location.state?.scores || [];
   const tiles: Tile[] = location.state?.tiles || [];
+  const actionHistory: string[] = location.state?.actionHistory || [];
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -86,14 +95,46 @@ const Result = () => {
             })}
           </div>
         </CardContent>
-        {uniqueTags.length > 0 && (
+        {(uniqueTags.length > 0 || actionHistory.length > 0) && (
           <CardFooter className="flex-col items-start pt-4 border-t">
-            <h3 className="text-md font-semibold mb-3 text-gray-700 dark:text-gray-300">Tags in this Game</h3>
-            <div className="flex flex-wrap gap-2">
-              {uniqueTags.map(tag => (
-                <Badge key={tag} variant="secondary">{tag}</Badge>
-              ))}
-            </div>
+            {uniqueTags.length > 0 && (
+              <>
+                <h3 className="text-md font-semibold mb-3 text-gray-700 dark:text-gray-300">Tags in this Game</h3>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {uniqueTags.map(tag => (
+                    <Badge key={tag} variant="secondary">{tag}</Badge>
+                  ))}
+                </div>
+              </>
+            )}
+            {actionHistory.length > 0 && (
+              <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    <FileText className="h-4 w-4 mr-2" />
+                    View Game Report
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Game Action History</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-4">
+                    {actionHistory.length > 0 ? (
+                      <div className="space-y-2">
+                        {actionHistory.map((action, index) => (
+                          <div key={index} className="text-sm py-1 border-b border-gray-200 dark:border-gray-700">
+                            {action}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-4">No action history available.</p>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
           </CardFooter>
         )}
       </Card>

@@ -95,6 +95,9 @@ const Play = () => {
   const [history, setHistory] = useState<GameState[]>([]);
   const [canUndo, setCanUndo] = useState(false);
   
+  // Action history for reporting
+  const [actionHistory, setActionHistory] = useState<string[]>([]);
+  
   const isInitialMount = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const sfxRef = useRef<HTMLAudioElement>(null);
@@ -282,6 +285,12 @@ const Play = () => {
     if (feedbackMessages.length === 0) {
         feedbackMessages.push("No tags matched this turn.");
     }
+    
+    // Add to action history
+    const currentPlayerName = TEAMS[(startingPlayerIndex + turn) % TEAMS.length].name;
+    const actionEntry = `Round ${round}, ${currentPlayerName}: Placed '${placedTile.word}' at position (${row},${col})${points > 0 ? ` (+${points} points)` : ''}`;
+    setActionHistory(prev => [...prev, actionEntry, ...feedbackMessages]);
+    
     setLastMoveFeedback(feedbackMessages);
 
     setBoardState(prev => ({ ...prev, [key]: { color: currentPlayer.textColor, tile: item.tile } }));
@@ -330,6 +339,20 @@ const Play = () => {
     setTurn(prevState.turn);
     setPlacedTilesCount(prevState.placedTilesCount);
     setLastMoveFeedback(prevState.lastMoveFeedback);
+    
+    // Remove last action entries from history
+    const currentPlayerName = TEAMS[(startingPlayerIndex + turn) % TEAMS.length].name;
+    const lastTile = Object.values(boardState).find(hex => hex.tile)?.tile;
+    if (lastTile) {
+      const actionToRemove = `Round ${prevState.round}, ${currentPlayerName}: Placed '${lastTile.word}'`;
+      setActionHistory(prev => {
+        const index = prev.findIndex(entry => entry.startsWith(actionToRemove));
+        if (index !== -1) {
+          return prev.slice(0, index);
+        }
+        return prev;
+      });
+    }
     
     // Remove the last state from history
     setHistory(prev => prev.slice(0, -1));
@@ -429,7 +452,7 @@ const Play = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => navigate('/result', { state: { scores: finalScores, tiles: configuredTiles } })}>
+            <AlertDialogAction onClick={() => navigate('/result', { state: { scores: finalScores, tiles: configuredTiles, actionHistory } })}>
               View Results
             </AlertDialogAction>
           </AlertDialogFooter>
