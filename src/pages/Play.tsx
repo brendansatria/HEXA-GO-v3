@@ -21,6 +21,9 @@ import {
 import VolumeControl from "@/components/VolumeControl";
 import GameMusic from '@/assets/Fast_Jazz_30.mp3';
 import DropSound from '@/assets/MusicEffectJazzTr SDT055702.wav';
+import logopart1 from '@/assets/logopart_1.png';
+import logopart2 from '@/assets/logopart_2.png';
+import logopart3 from '@/assets/logopart_3.png';
 
 interface DraggableItem {
   color: string;
@@ -285,7 +288,11 @@ const Play = () => {
         {/* Left Sidebar */}
         <div className="w-80 shrink-0 px-4 py-12 border-r border-gray-200 dark:border-gray-800 flex flex-col items-center justify-between bg-gray-50 dark:bg-gray-900">
           <div className="w-full flex flex-col items-center space-y-6">
-            <img src="/hexago_logo.png" alt="Hexa Go! Logo" className="w-48" />
+            <div className="w-48 flex justify-center items-center">
+              <img src={logopart1} alt="Hexa Go! part 1" className="h-12" />
+              <img src={logopart2} alt="Hexa Go! part 2" className="h-12" />
+              <img src={logopart3} alt="Hexa Go! part 3" className="h-12" />
+            </div>
             <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
             
             {/* Actions Box */}
