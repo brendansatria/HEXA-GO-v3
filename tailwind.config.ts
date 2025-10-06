@@ -100,8 +100,8 @@ export default {
           },
         },
         "float": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-8px)" },
+          "0%, 100%": { transform: "translateY(0) scale(1.1)" },
+          "50%": { transform: "translateY(-8px) scale(1.1)" },
         },
       },
       animation: {
