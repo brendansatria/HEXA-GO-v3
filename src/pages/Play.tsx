@@ -19,6 +19,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import VolumeControl from "@/components/VolumeControl";
+import { Button } from "@/components/Button";
+import { Undo2 } from "lucide-react";
 import GameMusic from '@/assets/Fast_Jazz_30.mp3';
 import DropSound from '@/assets/MusicEffectJazzTr SDT055702.wav';
 import logopart1 from '@/assets/logopart_1.png';
@@ -34,6 +36,17 @@ interface DraggableItem {
 
 interface Score extends Team {
   score: number;
+}
+
+interface GameState {
+  boardState: { [key: string]: HexagonState };
+  scores: Score[];
+  hand: (Tile | null)[];
+  deck: Tile[];
+  round: number;
+  turn: number;
+  placedTilesCount: number;
+  lastMoveFeedback: string[];
 }
 
 const shuffleArray = (array: any[]) => {
@@ -77,6 +90,10 @@ const Play = () => {
   const [isThreePlayerSetup, setIsThreePlayerSetup] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [finalScores, setFinalScores] = useState<Score[]>([]);
+  
+  // History for undo functionality
+  const [history, setHistory] = useState<GameState[]>([]);
+  const [canUndo, setCanUndo] = useState(false);
   
   const isInitialMount = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -191,6 +208,24 @@ const Play = () => {
     }
   }, [turn, round, boardState, deck, hand]);
 
+  // Save state to history before making a move
+  const saveToHistory = () => {
+    setHistory(prev => [
+      ...prev,
+      {
+        boardState: JSON.parse(JSON.stringify(boardState)),
+        scores: JSON.parse(JSON.stringify(scores)),
+        hand: JSON.parse(JSON.stringify(hand)),
+        deck: JSON.parse(JSON.stringify(deck)),
+        round,
+        turn,
+        placedTilesCount,
+        lastMoveFeedback: [...lastMoveFeedback]
+      }
+    ]);
+    setCanUndo(true);
+  };
+
   const startingPlayerIndex = (round - 1) % TEAMS.length;
   const currentPlayerIndex = (startingPlayerIndex + turn) % TEAMS.length;
   const currentPlayer = TEAMS[currentPlayerIndex];
@@ -215,6 +250,9 @@ const Play = () => {
   };
 
   const handleDrop = (row: number, col: number, item: DraggableItem) => {
+    // Save current state to history before making changes
+    saveToHistory();
+    
     if (sfxRef.current) {
       sfxRef.current.volume = 0.8;
       sfxRef.current.currentTime = 0;
@@ -279,6 +317,27 @@ const Play = () => {
     }
   };
 
+  const handleUndo = () => {
+    if (history.length === 0) return;
+    
+    const prevState = history[history.length - 1];
+    
+    setBoardState(prevState.boardState);
+    setScores(prevState.scores);
+    setHand(prevState.hand);
+    setDeck(prevState.deck);
+    setRound(prevState.round);
+    setTurn(prevState.turn);
+    setPlacedTilesCount(prevState.placedTilesCount);
+    setLastMoveFeedback(prevState.lastMoveFeedback);
+    
+    // Remove the last state from history
+    setHistory(prev => prev.slice(0, -1));
+    
+    // Update undo button state
+    setCanUndo(history.length > 1);
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <audio ref={audioRef} src={GameMusic} loop />
@@ -311,7 +370,18 @@ const Play = () => {
               </div>
             </div>
           </div>
-          <VolumeControl audioRef={audioRef} />
+          <div className="flex space-x-2">
+            <VolumeControl audioRef={audioRef} />
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={handleUndo}
+              disabled={!canUndo}
+              className="hover:bg-[#EBE5DD]"
+            >
+              <Undo2 className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Main Area */}
