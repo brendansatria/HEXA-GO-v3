@@ -5,6 +5,7 @@ import { useGame, Tile } from '@/context/GameContext';
 import logopart1 from '@/assets/logopart_1.png';
 import logopart2 from '@/assets/logopart_2.png';
 import logopart3 from '@/assets/logopart_3.png';
+import logoShade from '@/assets/logo_shade.png';
 
 const Start = () => {
   const navigate = useNavigate();
@@ -74,6 +75,10 @@ const Start = () => {
             Instant Play
           </Button>
         </div>
+      </div>
+      <div className="flex flex-col items-center pb-4">
+        <p className="text-xs text-gray-500 mb-1">design by:</p>
+        <img src={logoShade} alt="Kummara" className="h-10" />
       </div>
     </div>
   );
