@@ -30,7 +30,7 @@ const DraggableHexagon: React.FC<DraggableHexagonProps> = ({ sideLength, color, 
     <div
       ref={drag}
       style={{ opacity: isDragging ? 0 : 1 }}
-      className={cn("cursor-grab transition-transform duration-200 ease-in-out hover:scale-110")}
+      className={cn("cursor-grab transition-transform duration-200 ease-in-out hover:scale-110 hover:animate-float")}
     >
       <Hexagon sideLength={sideLength} className={color} word={tile.word} />
     </div>
