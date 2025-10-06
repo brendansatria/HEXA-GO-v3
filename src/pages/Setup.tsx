@@ -284,7 +284,8 @@ const Setup = () => {
         {isSaveDisabled && (
             <p className="text-sm text-red-500 mt-2 text-center">
                 A minimum of 2 starting tiles and 8 reserve tiles are required.<br/>
-                Each required tile must have at least "Tile's Word" and "Tag 1" filled. Click the Default Setup button at the top to fill in the example data.
+                Each required tile must have at least "Tile's Word" and "Tag 1" filled.<br/>
+                Click the Default Setup button at the top to fill in the example data.
             </p>
         )}
       </div>
