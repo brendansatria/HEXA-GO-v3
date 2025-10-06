@@ -120,6 +120,21 @@ const Result = () => {
                     <DialogTitle>Game Action History</DialogTitle>
                   </DialogHeader>
                   <div className="py-4">
+                    <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                      <h3 className="font-bold text-lg mb-2">Final Scores</h3>
+                      <div className="space-y-2">
+                        {sortedScores.map((team, index) => (
+                          <div key={index} className="flex justify-between">
+                            <span className="flex items-center">
+                              <span className={`w-3 h-3 rounded-full mr-2 ${team.bgColor}`}></span>
+                              {team.name}
+                            </span>
+                            <span className="font-semibold">{team.score} points</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">Action History</h3>
                     {actionHistory.length > 0 ? (
                       <div className="space-y-2">
                         {actionHistory.map((action, index) => (
