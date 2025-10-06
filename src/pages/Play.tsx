@@ -49,6 +49,16 @@ interface GameState {
   lastMoveFeedback: string[];
 }
 
+interface MissedOpportunity {
+  round: number;
+  team: string;
+  chosenTile: Tile;
+  bestTile: Tile;
+  chosenScore: number;
+  bestScore: number;
+  position: string;
+}
+
 const shuffleArray = (array: any[]) => {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -74,6 +84,101 @@ const getNeighbors = (row: number, col: number): [number, number][] => {
   }
 };
 
+const getAllValidPositions = (boardState: { [key: string]: HexagonState }, isTwoPlayerSetup: boolean, isThreePlayerSetup: boolean): [number, number][] => {
+  const positions: [number, number][] = [];
+  const rows = 6;
+  const cols = 6;
+  
+  let excludedHexes: string[] = [];
+  if (isTwoPlayerSetup) {
+    excludedHexes = ['1-5', '3-5', '5-5'];
+  } else if (isThreePlayerSetup) {
+    excludedHexes = ['0-0', '2-0', '4-0'];
+  }
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const key = `${row}-${col}`;
+      
+      if (excludedHexes.includes(key)) {
+        continue;
+      }
+      
+      // Skip if position is already occupied
+      if (boardState[key]) {
+        continue;
+      }
+      
+      // Check if position has at least one neighbor that is occupied
+      const neighbors = getNeighbors(row, col);
+      const hasOccupiedNeighbor = neighbors.some(([nRow, nCol]) => {
+        const neighborKey = `${nRow}-${nCol}`;
+        return boardState[neighborKey] !== undefined;
+      });
+      
+      // Position is valid if it's adjacent to an occupied tile or if board is empty
+      if (hasOccupiedNeighbor || Object.keys(boardState).length === 0) {
+        positions.push([row, col]);
+      }
+    }
+  }
+  
+  return positions;
+};
+
+const calculateScoreForTileAtPosition = (
+  tile: Tile,
+  row: number,
+  col: number,
+  boardState: { [key: string]: HexagonState }
+): number => {
+  let score = 0;
+  const placedTileTags = [tile.tag1, tile.tag2, tile.tag3].filter(tag => tag && tag.trim() !== '');
+  if (placedTileTags.length === 0) return 0;
+
+  const neighbors = getNeighbors(row, col);
+  for (const [nRow, nCol] of neighbors) {
+    const neighborKey = `${nRow}-${nCol}`;
+    const neighborHex = boardState[neighborKey];
+    if (neighborHex?.tile) {
+      const neighborTags = [neighborHex.tile.tag1, neighborHex.tile.tag2, neighborHex.tile.tag3].filter(tag => tag && tag.trim() !== '');
+      if (placedTileTags.some(tag => neighborTags.includes(tag))) {
+        score += 2;
+      }
+    }
+  }
+  return score;
+};
+
+const findBestMove = (
+  hand: (Tile | null)[],
+  boardState: { [key: string]: HexagonState },
+  isTwoPlayerSetup: boolean,
+  isThreePlayerSetup: boolean
+): { tile: Tile | null; position: [number, number] | null; score: number } => {
+  const validPositions = getAllValidPositions(boardState, isTwoPlayerSetup, isThreePlayerSetup);
+  let bestTile: Tile | null = null;
+  let bestPosition: [number, number] | null = null;
+  let bestScore = -1;
+
+  // For each tile in hand
+  hand.forEach((tile) => {
+    if (!tile) return;
+    
+    // For each valid position on the board
+    validPositions.forEach(([row, col]) => {
+      const score = calculateScoreForTileAtPosition(tile, row, col, boardState);
+      if (score > bestScore) {
+        bestScore = score;
+        bestTile = tile;
+        bestPosition = [row, col];
+      }
+    });
+  });
+
+  return { tile: bestTile, position: bestPosition, score: bestScore };
+};
+
 const Play = () => {
   const navigate = useNavigate();
   const { tiles: configuredTiles } = useGame();
@@ -97,6 +202,9 @@ const Play = () => {
   
   // Action history for reporting
   const [actionHistory, setActionHistory] = useState<string[]>([]);
+  
+  // Missed opportunities tracking
+  const [missedOpportunities, setMissedOpportunities] = useState<MissedOpportunity[]>([]);
   
   const isInitialMount = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -264,6 +372,26 @@ const Play = () => {
 
     const key = `${row}-${col}`;
     const points = calculateScore(row, col, item.tile, boardState);
+
+    // Check for missed opportunity
+    const bestMove = findBestMove(hand, boardState, isTwoPlayerSetup, isThreePlayerSetup);
+    if (bestMove.tile && bestMove.tile.id !== item.tile.id && bestMove.score > points) {
+      const currentPlayerName = TEAMS[(startingPlayerIndex + turn) % TEAMS.length].name;
+      const missedOpportunity: MissedOpportunity = {
+        round,
+        team: currentPlayerName,
+        chosenTile: item.tile,
+        bestTile: bestMove.tile,
+        chosenScore: points,
+        bestScore: bestMove.score,
+        position: `${row}-${col}`
+      };
+      setMissedOpportunities(prev => [...prev, missedOpportunity]);
+      
+      // Add to action history
+      const opportunityEntry = `Round ${round}, ${currentPlayerName}: Missed opportunity! Chose '${item.tile.word}' (${points} pts) instead of '${bestMove.tile.word}' (${bestMove.score} pts)`;
+      setActionHistory(prev => [...prev, opportunityEntry]);
+    }
 
     const feedbackMessages: string[] = [];
     const placedTile = item.tile;
@@ -452,7 +580,7 @@ const Play = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => navigate('/result', { state: { scores: finalScores, tiles: configuredTiles, actionHistory } })}>
+            <AlertDialogAction onClick={() => navigate('/result', { state: { scores: finalScores, tiles: configuredTiles, actionHistory, missedOpportunities } })}>
               View Results
             </AlertDialogAction>
           </AlertDialogFooter>
