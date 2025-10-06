@@ -20,9 +20,10 @@ const Start = () => {
       setHasHistory(true);
     }
 
-    const timer1 = setTimeout(() => setVisible1(true), 200);
-    const timer2 = setTimeout(() => setVisible2(true), 700);
-    const timer3 = setTimeout(() => setVisible3(true), 1200);
+    // Faster and overlapping animation timing
+    const timer1 = setTimeout(() => setVisible1(true), 100);  // Start immediately
+    const timer2 = setTimeout(() => setVisible2(true), 250);  // Overlap with part 1
+    const timer3 = setTimeout(() => setVisible3(true), 400);  // Overlap with part 2
 
     return () => {
       clearTimeout(timer1);
@@ -47,17 +48,17 @@ const Start = () => {
           <img
             src={logopart1}
             alt="Hexa Go! part 1"
-            className={`h-full transition-opacity duration-500 ease-out ${visible1 ? 'opacity-100' : 'opacity-0'}`}
+            className={`h-full transition-opacity duration-300 ease-out ${visible1 ? 'opacity-100' : 'opacity-0'}`}
           />
           <img
             src={logopart2}
             alt="Hexa Go! part 2"
-            className={`h-full transition-opacity duration-500 ease-out ${visible2 ? 'opacity-100' : 'opacity-0'}`}
+            className={`h-full transition-opacity duration-300 ease-out ${visible2 ? 'opacity-100' : 'opacity-0'}`}
           />
           <img
             src={logopart3}
             alt="Hexa Go! part 3"
-            className={`h-full transition-opacity duration-500 ease-out ${visible3 ? 'opacity-100' : 'opacity-0'}`}
+            className={`h-full transition-opacity duration-300 ease-out ${visible3 ? 'opacity-100' : 'opacity-0'}`}
           />
         </div>
         <div className="flex space-x-6">
