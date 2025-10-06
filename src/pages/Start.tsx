@@ -5,6 +5,7 @@ import { useGame, Tile } from '@/context/GameContext';
 import logopart1 from '@/assets/logopart_1.png';
 import logopart2 from '@/assets/logopart_2.png';
 import logopart3 from '@/assets/logopart_3.png';
+import designByImage from '@/assets/logogogo bg hitam.png';
 
 const Start = () => {
   const navigate = useNavigate();
@@ -73,6 +74,14 @@ const Start = () => {
           >
             Instant Play
           </Button>
+        </div>
+        <div className="mt-8 flex flex-col items-center">
+          <p className="text-sm text-gray-500 mb-2">design by:</p>
+          <img 
+            src={designByImage} 
+            alt="Design by" 
+            className="h-12 object-contain"
+          />
         </div>
       </div>
     </div>
