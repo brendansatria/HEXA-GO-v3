@@ -48,7 +48,7 @@ const Start = () => {
           <img
             src={logopart1}
             alt="Hexa Go! part 1"
-            className={`h-full transition-all duration-500 ease-out ${visible1 ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-90'}`}
+            className={`h-full transition-all duration-700 ease-out ${visible1 ? 'opacity-100 translate-x-0 scale-100 rotate-0' : 'opacity-0 -translate-x-4 scale-75 -rotate-45'}`}
           />
           <img
             src={logopart2}
