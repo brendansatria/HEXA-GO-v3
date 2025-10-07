@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, FileText, AlertTriangle } from 'lucide-react';
+import { Trophy, FileText, AlertTriangle, Download } from 'lucide-react';
 import { Team } from '@/lib/teams';
 import { Tile } from '@/context/GameContext';
 import ResultMusic from '@/assets/result_music.wav';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -77,7 +78,6 @@ const Result = () => {
   });
   const uniqueTags = Array.from(allTags).sort();
 
-  // Calculate missed opportunities per team
   const missedOpportunitiesByTeam: Record<string, MissedOpportunity[]> = {};
   missedOpportunities.forEach(opportunity => {
     if (!missedOpportunitiesByTeam[opportunity.team]) {
@@ -85,6 +85,69 @@ const Result = () => {
     }
     missedOpportunitiesByTeam[opportunity.team].push(opportunity);
   });
+
+  const generateCSV = () => {
+    const escapeCSV = (str: string | number) => {
+      const s = String(str);
+      if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+        return `"${s.replace(/"/g, '""')}"`;
+      }
+      return s;
+    };
+
+    let csvContent: string[] = [];
+
+    // Section 1: Final Scores
+    csvContent.push('Final Scores');
+    csvContent.push('Team,Score');
+    sortedScores.forEach(team => {
+      csvContent.push(`${escapeCSV(team.name)},${escapeCSV(team.score)}`);
+    });
+    csvContent.push('');
+
+    // Section 2: Missed Opportunities
+    if (missedOpportunities.length > 0) {
+      csvContent.push('Missed Opportunities');
+      csvContent.push('Round,Team,Chosen Tile,Chosen Score,Better Tile,Better Score');
+      missedOpportunities.forEach(op => {
+        const row = [
+          op.round,
+          op.team,
+          op.chosenTile.word,
+          op.chosenScore,
+          op.bestTile.word,
+          op.bestScore
+        ].map(escapeCSV).join(',');
+        csvContent.push(row);
+      });
+      csvContent.push('');
+    }
+
+    // Section 3: Action History
+    if (actionHistory.length > 0) {
+      csvContent.push('Action History');
+      csvContent.push('Log Entry');
+      actionHistory.forEach(action => {
+        csvContent.push(escapeCSV(action));
+      });
+    }
+
+    return csvContent.join('\n');
+  };
+
+  const handleDownload = () => {
+    const csvString = generateCSV();
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'hexa-go-report.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
@@ -142,11 +205,11 @@ const Result = () => {
                     View Game Report
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
                   <DialogHeader>
                     <DialogTitle>Game Action History</DialogTitle>
                   </DialogHeader>
-                  <div className="py-4">
+                  <div className="py-4 flex-grow overflow-y-auto">
                     <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
                       <h3 className="font-bold text-lg mb-2">Final Scores</h3>
                       <div className="space-y-2">
@@ -200,6 +263,12 @@ const Result = () => {
                       <p className="text-gray-500 text-center py-4">No action history available.</p>
                     )}
                   </div>
+                  <DialogFooter className="pt-4 border-t mt-auto flex-shrink-0">
+                    <Button variant="secondary" onClick={handleDownload}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Report (.csv)
+                    </Button>
+                  </DialogFooter>
                 </DialogContent>
               </Dialog>
             )}
