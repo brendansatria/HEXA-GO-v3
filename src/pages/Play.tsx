@@ -505,9 +505,9 @@ const Play = () => {
             </div>
             <TurnIndicator round={round} currentPlayerName={currentPlayer.name} scores={scores} />
             
-            {/* Actions Box */}
+            {/* Results Box */}
             <div className="w-full">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2 text-center">Actions</h3>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2 text-center">Results</h3>
               <div className="p-3 border rounded-lg bg-white dark:bg-gray-800 min-h-[120px] text-sm text-gray-700 dark:text-gray-300 space-y-1">
                 {lastMoveFeedback.length > 0 ? (
                   lastMoveFeedback.map((msg, index) => (
@@ -515,7 +515,7 @@ const Play = () => {
                   ))
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-center italic text-gray-500">Place a tile to see actions history.</p>
+                    <p className="text-center italic text-gray-500">Place a tile to see results.</p>
                   </div>
                 )}
               </div>
