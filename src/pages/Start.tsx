@@ -79,6 +79,7 @@ const Start = () => {
       <div className="flex flex-col items-center pb-12">
         <p className="text-xs text-gray-500 mb-1">design by:</p>
         <img src={logoShade} alt="Kummara" className="h-10" />
+        <p className="text-xs text-gray-500 mt-1">www.kummara.com</p>
       </div>
     </div>
   );
