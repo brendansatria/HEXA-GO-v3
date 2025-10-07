@@ -59,6 +59,13 @@ interface MissedOpportunity {
   position: string;
 }
 
+interface FeedbackState {
+  [key: string]: {
+    show: boolean;
+    isMatch: boolean;
+  };
+}
+
 const shuffleArray = (array: any[]) => {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -195,6 +202,9 @@ const Play = () => {
   const [isThreePlayerSetup, setIsThreePlayerSetup] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [finalScores, setFinalScores] = useState<Score[]>([]);
+  
+  // Feedback state for visual indicators
+  const [feedbackState, setFeedbackState] = useState<FeedbackState>({});
   
   // History for undo functionality
   const [history, setHistory] = useState<GameState[]>([]);
@@ -396,20 +406,36 @@ const Play = () => {
     const feedbackMessages: string[] = [];
     const placedTile = item.tile;
     const placedTileTags = [placedTile.tag1, placedTile.tag2, placedTile.tag3].filter(tag => tag && tag.trim() !== '');
-    if (placedTileTags.length > 0) {
-        const neighbors = getNeighbors(row, col);
-        for (const [nRow, nCol] of neighbors) {
-            const neighborKey = `${nRow}-${nCol}`;
-            const neighborHex = boardState[neighborKey];
-            if (neighborHex?.tile) {
-                const neighborTile = neighborHex.tile;
-                const neighborTags = [neighborTile.tag1, neighborTile.tag2, neighborTile.tag3].filter(tag => tag && tag.trim() !== '');
-                if (placedTileTags.some(tag => neighborTags.includes(tag))) {
-                    feedbackMessages.push(`'${placedTile.word}' & '${neighborTile.word}' matched.`);
-                }
-            }
+    
+    // Create feedback state for neighbors
+    const newFeedbackState: FeedbackState = {};
+    const neighbors = getNeighbors(row, col);
+    
+    for (const [nRow, nCol] of neighbors) {
+      const neighborKey = `${nRow}-${nCol}`;
+      const neighborHex = boardState[neighborKey];
+      
+      if (neighborHex?.tile) {
+        const neighborTags = [neighborHex.tile.tag1, neighborHex.tile.tag2, neighborHex.tile.tag3].filter(tag => tag && tag.trim() !== '');
+        const isMatch = placedTileTags.some(tag => neighborTags.includes(tag));
+        
+        newFeedbackState[neighborKey] = {
+          show: true,
+          isMatch: isMatch
+        };
+        
+        if (isMatch) {
+          feedbackMessages.push(`'${placedTile.word}' & '${neighborHex.tile.word}' matched.`);
         }
+      }
     }
+    
+    // Set feedback state and clear it after 5 seconds
+    setFeedbackState(newFeedbackState);
+    setTimeout(() => {
+      setFeedbackState({});
+    }, 5000);
+    
     if (feedbackMessages.length === 0) {
         feedbackMessages.push("No tags matched this turn.");
     }
@@ -567,6 +593,7 @@ const Play = () => {
               onDrop={handleDrop} 
               isTwoPlayerSetup={isTwoPlayerSetup}
               isThreePlayerSetup={isThreePlayerSetup}
+              feedbackState={feedbackState}
             />
           </div>
         </main>

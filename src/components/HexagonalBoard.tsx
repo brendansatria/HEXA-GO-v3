@@ -14,6 +14,13 @@ export interface HexagonState {
   tile: Tile | null;
 }
 
+interface FeedbackState {
+  [key: string]: {
+    show: boolean;
+    isMatch: boolean;
+  };
+}
+
 interface HexagonalBoardProps {
   rows: number;
   cols: number;
@@ -22,6 +29,7 @@ interface HexagonalBoardProps {
   onDrop: (row: number, col: number, item: DraggableItem) => void;
   isTwoPlayerSetup?: boolean;
   isThreePlayerSetup?: boolean;
+  feedbackState?: FeedbackState;
 }
 
 const HexagonalBoard: React.FC<HexagonalBoardProps> = ({ 
@@ -31,7 +39,8 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({
   boardState, 
   onDrop, 
   isTwoPlayerSetup = false,
-  isThreePlayerSetup = false
+  isThreePlayerSetup = false,
+  feedbackState = {}
 }) => {
   const sideLength = hexagonSize;
   const hexWidth = Math.sqrt(3) * sideLength;
@@ -56,6 +65,9 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({
       const xOffset = col * hexWidth + (row % 2 === 1 ? hexWidth / 2 : 0);
       const yOffset = row * (hexHeight * 0.75);
       const hexState = boardState[key] || { color: null, tile: null };
+      
+      // Get feedback state for this hexagon
+      const feedback = feedbackState[key] || { show: false, isMatch: false };
 
       hexagons.push(
         <div
@@ -69,6 +81,8 @@ const HexagonalBoard: React.FC<HexagonalBoardProps> = ({
             word={hexState.tile?.word}
             onDrop={(item) => onDrop(row, col, item)}
             isOccupied={!!hexState.tile}
+            showFeedback={feedback.show}
+            isMatch={feedback.isMatch}
           />
         </div>
       );
