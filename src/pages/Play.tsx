@@ -430,11 +430,11 @@ const Play = () => {
       }
     }
     
-    // Set feedback state and clear it after 5 seconds
+    // Set feedback state and clear it after 3 seconds
     setFeedbackState(newFeedbackState);
     setTimeout(() => {
       setFeedbackState({});
-    }, 5000);
+    }, 3000);
     
     if (feedbackMessages.length === 0) {
         feedbackMessages.push("No tags matched this turn.");
