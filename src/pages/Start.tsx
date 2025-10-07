@@ -33,13 +33,44 @@ const Start = () => {
     };
   }, []);
 
+  const getDefaultTiles = (): Tile[] => {
+    const defaultStartingTiles: Tile[] = [
+      { id: 1, word: 'BATAGOR', tag1: 'BANDUNG', tag2: 'KULINER', tag3: '', isStartingTile: true },
+      { id: 2, word: 'KOTA TUA', tag1: 'JAKARTA', tag2: 'TEMPAT', tag3: '', isStartingTile: true },
+    ];
+
+    const defaultReserveTiles: Tile[] = [
+      { id: 3, word: 'KERAK TELOR', tag1: 'JAKARTA', tag2: 'KULINER', tag3: '', isStartingTile: false },
+      { id: 4, word: 'GARUDA WISNU KENCANA', tag1: 'BALI', tag2: 'BANGUNAN', tag3: '', isStartingTile: false },
+      { id: 5, word: 'ANGKLUNG', tag1: 'BANDUNG', tag2: 'KERAJINAN', tag3: '', isStartingTile: false },
+      { id: 6, word: 'MALIOBORO', tag1: 'JOGJA', tag2: 'TEMPAT', tag3: '', isStartingTile: false },
+      { id: 7, word: 'MONAS', tag1: 'JAKARTA', tag2: 'BANGUNAN', tag3: '', isStartingTile: false },
+      { id: 8, word: 'SATE LILIT', tag1: 'BALI', tag2: 'KULINER', tag3: '', isStartingTile: false },
+      { id: 9, word: 'KAWAH PUTIH', tag1: 'BANDUNG', tag2: 'TEMPAT', tag3: '', isStartingTile: false },
+      { id: 10, word: 'BATIK', tag1: 'JOGJA', tag2: 'KERAJINAN', tag3: '', isStartingTile: false },
+      { id: 11, word: 'SONGKET', tag1: 'BALI', tag2: 'KERAJINAN', tag3: '', isStartingTile: false },
+      { id: 12, word: 'KERATON', tag1: 'JOGJA', tag2: 'BANGUNAN', tag3: '', isStartingTile: false },
+      { id: 13, word: 'WHOOSH', tag1: 'JAKARTA', tag2: 'BANDUNG', tag3: '', isStartingTile: false },
+      { id: 14, word: 'PAWAI ADAT', tag1: 'JOGJA', tag2: 'BALI', tag3: '', isStartingTile: false },
+    ];
+
+    return [...defaultStartingTiles, ...defaultReserveTiles];
+  };
+
   const handleInstantPlay = () => {
     const lastGameTilesJSON = localStorage.getItem('lastGameTiles');
+    
     if (lastGameTilesJSON) {
+      // Use saved game data
       const lastTiles: Tile[] = JSON.parse(lastGameTilesJSON);
       setTiles(lastTiles);
-      navigate('/play');
+    } else {
+      // Use default game data
+      const defaultTiles = getDefaultTiles();
+      setTiles(defaultTiles);
     }
+    
+    navigate('/play');
   };
 
   return (
@@ -70,7 +101,6 @@ const Start = () => {
             size="lg"
             className="px-8 py-6 text-lg bg-[#316283] hover:bg-[#25485e] text-white"
             onClick={handleInstantPlay}
-            disabled={!hasHistory}
           >
             Instant Play
           </Button>
